@@ -1,5 +1,3 @@
-// test commit ! 
-
 const int PIR_PIN = 26;   // PIR sensor pin
 const int RCWL_PIN = 25;  // RCWL sensor pin
 const int LED_PIN = 27;   // LED pin to indicate room availability
