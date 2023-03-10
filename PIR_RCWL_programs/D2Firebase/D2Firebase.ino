@@ -14,23 +14,26 @@
 #define API_KEY "AIzaSyCiNhZaSeb_6GklMV_gf-9-cNXeBjuqKJs"
 
 // Insert RTDB URLefine the RTDB URL */
-#define DATABASE_URL "https://smart-meeting-room-cc563-default-rtdb.europe-west1.firebasedatabase.app/" 
+#define DATABASE_URL "https://smart-meeting-room-cc563-default-rtdb.europe-west1.firebasedatabase.app/"
 
-//Define Firebase Data object
+//Define Firebase Data objet
 FirebaseData fbdo;
+FirebaseJson jsonData, Avalability;
 
 FirebaseAuth auth;
 FirebaseConfig config;
+
+const char* Equipments[] = { "White Board", "Talbets", "Data Show" };
 
 unsigned long sendDataPrevMillis = 0;
 int count = 0;
 bool signupOK = false;
 
-void setup(){
+void setup() {
   Serial.begin(115200);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED){
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     delay(300);
   }
@@ -49,45 +52,56 @@ void setup(){
   config.database_url = DATABASE_URL;
 
   /* Sign up */
-  if (Firebase.signUp(&config, &auth, "", "")){
+  if (Firebase.signUp(&config, &auth, "", "")) {
     Serial.println("ok");
     signupOK = true;
-  }
-  else{
+  } else {
     Serial.printf("%s\n", config.signer.signupError.message.c_str());
   }
 
   /* Assign the callback function for the long running token generation task */
-  config.token_status_callback = tokenStatusCallback; //see addons/TokenHelper.h
-  
+  config.token_status_callback = tokenStatusCallback;  //see addons/TokenHelper.h
+
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
+
+  jsonData.add("ID", "MR-01");
+  jsonData.add("Status", "Available");
+  jsonData.add("Capacity", 7);
+  // jsonData.add("Equipments", Equipments);
+  jsonData.add("Temperature");
+  jsonData.add("Humidity");
+
+  Avalability.add("RoomID", "MR-01");
+  Avalability.add("TimeStamp/Time");
+  Avalability.add("TimeStamp/Date");
+  Avalability.add("Status");
 }
 
-void loop(){
-  if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0)){
+void loop() {
+  int Temp = random(10000) / 100.0;
+  int Hum = random(10000) / 100.0;
+  jsonData.set("Temperature", Temp);
+  jsonData.set("Humidity", Hum);
+  long int Time = millis(); 
+  char* Date = "10/03/2023";
+
+  Avalability.set("TimeStamp/Time", Time);
+  Avalability.set("TimeStamp/Date", Date); 
+  Avalability.set("Status", "Occupied");
+
+
+  if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
     // Write an Int number on the database path test/int
-    if (Firebase.RTDB.setInt(&fbdo, "test/int", count)){
+    if (Firebase.RTDB.set(&fbdo, "MeetingRooms/Room1", &jsonData) && Firebase.RTDB.push(&fbdo, "Occupency", &Avalability)) {
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
-    }
-    else {
+    } else {
       Serial.println("FAILED");
       Serial.println("REASON: " + fbdo.errorReason());
     }
-    count++;
-    
-    // Write an Float number on the database path test/float
-    if (Firebase.RTDB.setFloat(&fbdo, "test/float", 0.01 + random(0,100))){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
-      Serial.println("TYPE: " + fbdo.dataType());
-    }
-    else {
-      Serial.println("FAILED");
-      Serial.println("REASON: " + fbdo.errorReason());
-    }
+
   }
 }
