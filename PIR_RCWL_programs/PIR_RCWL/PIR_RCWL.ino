@@ -1,8 +1,8 @@
 const int PIR_PIN = 26;   // PIR sensor pin
 const int RCWL_PIN = 25;  // RCWL sensor pin
 const int LED_PIN = 27;   // LED pin to indicate room availability
-const int MOTION_DELAY = 5000;  // motion delay in milliseconds
-
+const int MOTION_DELAY_RoomOcc = 1000;  // motion delay in milliseconds
+const int MOTION_DELAY_RoomAv = 3000;
 
 bool personInTheRoom = false;   // flag to indicate person in the room
 unsigned long lastMotionTime = 0;  // last time RCWL detected motion
@@ -26,7 +26,7 @@ void loop() {
     Serial.print("PIR detects motion : ");
     delay(500);
     // RCWL detects motion for more than 5 seconds
-    if (RCWLdetectMotion()) {
+    if (RCWLdetectMotion(MOTION_DELAY_RoomAv)) {
       if(!personInTheRoom){      
       Serial.println("Room Occupied");
       personInTheRoom = true;
@@ -34,16 +34,17 @@ void loop() {
       }else{
         Serial.println("Person still in the room | From PIR");
       }
+    }
   } 
   // PIR sensor doesn't detect person
   else {
     // RCWL detects motion and person was previously detected
-    if (RCWLdetectMotion() && personInTheRoom) {
+    if (RCWLdetectMotion(MOTION_DELAY_RoomOcc) && personInTheRoom) {
       Serial.println("Person still in the room | From RCWL");
       lastMotionTime = millis();  // update last motion time
     } 
     // RCWL doesn't detect motion for more than 10 seconds
-    else if (!RCWLdetectMotion() && personInTheRoom && millis() - lastMotionTime > 10000) {
+    else if (!RCWLdetectMotion(MOTION_DELAY_RoomOcc) && personInTheRoom && millis() - lastMotionTime > 10000) {
       Serial.println("Room Available");
       personInTheRoom = false;
       //Send room status to the cloud 
@@ -52,10 +53,10 @@ void loop() {
 }
 
 // Function to detect motion with RCWL sensor for at least 5 seconds
-bool RCWLdetectMotion() {
+bool RCWLdetectMotion( int motionDelay) {
   unsigned long motionStartTime = millis();
   while (digitalRead(RCWL_PIN) == HIGH) {
-    if (millis() - motionStartTime >= MOTION_DELAY) {
+    if (millis() - motionStartTime >= motionDelay) {
       return true;
     }
     delay(100);  // wait for 100 milliseconds before checking again
