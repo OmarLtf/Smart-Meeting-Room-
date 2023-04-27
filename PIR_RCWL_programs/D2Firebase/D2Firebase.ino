@@ -10,7 +10,9 @@
 #define WIFI_SSID "NWA-STAFF-WIFI"
 #define WIFI_PASSWORD "Nwa$2022"
 
-// Insert Firebase project API Key
+
+
+// Insert Firebase project API KEY
 #define API_KEY "AIzaSyCiNhZaSeb_6GklMV_gf-9-cNXeBjuqKJs"
 
 // Insert RTDB URLefine the RTDB URL */
