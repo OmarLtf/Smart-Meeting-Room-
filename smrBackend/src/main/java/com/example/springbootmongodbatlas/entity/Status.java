@@ -1,4 +1,4 @@
-package com.DemoApplication.model;
+package com.example.springbootmongodbatlas.entity;
 
 public enum Status {
     AVAILABLE,

@@ -1,8 +1,9 @@
-package com.DemoApplication.model;
+package com.example.springbootmongodbatlas.entity;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
-
+@Document(collection = "MeetingRoom")
 public class meetingRoom {
     @Id
     private String id;

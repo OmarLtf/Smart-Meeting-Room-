@@ -1,13 +1,13 @@
-package com.DemoApplication;
+package com.example.springbootmongodbatlas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class smrApplication {
+public class SpringbootMongodbAtlasApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(smrApplication.class, args);
+        SpringApplication.run(SpringbootMongodbAtlasApplication.class, args);
     }
 
 }
