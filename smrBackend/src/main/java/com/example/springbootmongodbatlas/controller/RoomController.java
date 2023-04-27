@@ -1,8 +1,6 @@
 package com.example.springbootmongodbatlas.controller;
 
-import com.example.springbootmongodbatlas.entity.Product;
-import com.example.springbootmongodbatlas.entity.meetingRoom;
-import com.example.springbootmongodbatlas.service.ProductService;
+import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
 import com.example.springbootmongodbatlas.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +13,13 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
     @GetMapping("/all")
-    public List<meetingRoom> getRoom() {
-       return roomService.getRoom();
+    public List<meetingRoom> getAllRooms() {
+       return roomService.getAllRooms();
+    }
+    @GetMapping("/{id}")
+    public meetingRoom getRoom(@PathVariable int id ) {
+        System.out.println(roomService.getRoom(id));
+        return roomService.getRoom(id);
     }
 
     @PostMapping("/insert")
