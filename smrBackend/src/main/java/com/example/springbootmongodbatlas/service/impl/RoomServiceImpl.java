@@ -32,7 +32,6 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.delete(room);
         return room;
     }
-
     @Override
     public meetingRoom updateRoom(int id, meetingRoom room) {
         meetingRoom updatedRoom = roomRepository.findById(id).get();

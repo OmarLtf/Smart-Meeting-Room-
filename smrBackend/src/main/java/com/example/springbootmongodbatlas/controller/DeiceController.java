@@ -1,43 +1,40 @@
 package com.example.springbootmongodbatlas.controller;
 
 import com.example.springbootmongodbatlas.entity.Bookings.Booking;
-import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
+import com.example.springbootmongodbatlas.entity.Devices.Device;
 import com.example.springbootmongodbatlas.service.BookingService;
-import com.example.springbootmongodbatlas.service.RoomService;
+import com.example.springbootmongodbatlas.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Book;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/booking")
-public class BookingController {
+@RequestMapping("/api/device")
+public class DeiceController {
     @Autowired
-    private BookingService bookingService;
+    private DeviceService deviceService;
     @GetMapping("/all")
-    public List<Booking> getAllBookings() {
-       return bookingService.getAllBookings();
+    public List<Device> getAllDevices() {
+       return deviceService.getAllDevices();
     }
     @GetMapping("/{id}")
-    public Booking getBooking(@PathVariable int id ) {
-        System.out.println(bookingService.getBooking(id));
-        return bookingService.getBooking(id);
+    public Device getDevice(@PathVariable int id ) {
+        return deviceService.getDevice(id);
     }
 
     @PostMapping("/insert")
-    public Booking insert(@RequestBody Booking booking){
-        return  bookingService.addBooking(booking);
+    public Device insert(@RequestBody Device device){
+        return  deviceService.addDevice(device);
     }
 
     @PutMapping("/update/{id}")
-   public Booking update(@PathVariable int id,@RequestBody Booking booking ){
-       return bookingService.updateBooking(id, booking);
+   public Device update(@PathVariable int id,@RequestBody Device device ){
+       return deviceService.updateDevice(id, device);
     }
 
     @DeleteMapping("/delete/{id}")
-    public Booking delete(@PathVariable int id ){
-
-        return  bookingService.deleteBooking(id);
+    public Device delete(@PathVariable int id ){
+        return  deviceService.deleteDevice(id);
     }
 }

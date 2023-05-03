@@ -4,9 +4,14 @@ import com.example.springbootmongodbatlas.entity.Bookings.Booking;
 import com.example.springbootmongodbatlas.repo.BookingRepository;
 import com.example.springbootmongodbatlas.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
+
+import static org.apache.tomcat.jni.SSL.getTime;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -39,12 +44,23 @@ public class BookingServiceImpl implements BookingService {
         updatedBooking.setBookingStatus(booking.getBookingStatus());
         updatedBooking.setEndTime(booking.getEndTime());
         updatedBooking.setNotifications(booking.getNotifications());
-        updatedBooking.setRoomId(booking.getRoomId());
         updatedBooking.setStartTime(booking.getStartTime());
-        updatedBooking.setUserId(booking.getUserId());
       bookingRepository.save(updatedBooking);
       return updatedBooking;
 
+    }
+
+
+
+
+    @Override
+    public List<Booking> getMeetingsStartingIn15min(){
+        Date DateTimeNow = new Date();
+        Date DateTimeAfter15min = new Date(DateTimeNow.getTime() + (15 * 60 * 1000)); // 15 minutes in milliseconds
+
+        List<Booking> bookingsIn15min = bookingRepository.findAllBookingsForMeetingsStartingInNext15Min(DateTimeNow, DateTimeAfter15min);
+
+        return bookingsIn15min;
 
     }
 }

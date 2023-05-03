@@ -1,6 +1,8 @@
 package com.example.springbootmongodbatlas.controller;
 
+import com.example.springbootmongodbatlas.entity.Notifications.Notification;
 import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
+import com.example.springbootmongodbatlas.service.NotificationService;
 import com.example.springbootmongodbatlas.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,33 +10,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rooms")
-public class RoomController {
+@RequestMapping("/api/notif")
+public class NotificationController {
     @Autowired
-    private RoomService roomService;
-    @GetMapping("/all")
-    public List<meetingRoom> getAllRooms() {
-       return roomService.getAllRooms();
-    }
-    @GetMapping("/{id}")
-    public meetingRoom getRoom(@PathVariable int id ) {
-        System.out.println(roomService.getRoom(id));
-        return roomService.getRoom(id);
-    }
+    private NotificationService notificationService;
 
     @PostMapping("/insert")
-    public meetingRoom insert(@RequestBody meetingRoom room){
-        return  roomService.addRoom(room);
+    public Notification insert(@RequestBody Notification notification){
+        return  notificationService.addNotification(notification);
     }
 
     @PutMapping("/update/{id}")
-   public meetingRoom update(@PathVariable int id,@RequestBody meetingRoom room ){
-       return roomService.updateRoom(id,room);
+   public Notification update(@PathVariable int id,@RequestBody Notification notification ){
+       return notificationService.updateNotification(id, notification);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public meetingRoom delete(@PathVariable int id ){
-
-        return  roomService.deleteRoom(id);
+    @GetMapping("/{id}")
+    public Notification getNotification(@PathVariable int id) {
+        return notificationService.getNotification(id);
     }
+
+
 }

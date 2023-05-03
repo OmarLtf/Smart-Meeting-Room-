@@ -1,48 +1,48 @@
 package com.example.springbootmongodbatlas.service.impl;
 
-import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
-import com.example.springbootmongodbatlas.repo.RoomRepository;
-import com.example.springbootmongodbatlas.service.RoomService;
+import com.example.springbootmongodbatlas.entity.Bookings.Booking;
+import com.example.springbootmongodbatlas.entity.Users.User;
+import com.example.springbootmongodbatlas.repo.UserRepository;
+import com.example.springbootmongodbatlas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RoomServiceImpl implements RoomService {
+public class UserServiceImpl implements UserService {
     @Autowired
-    private RoomRepository roomRepository;
+    private UserRepository userRepository;
     @Override
-    public List<meetingRoom> getAllRooms() {
-        return roomRepository.findAll();
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public meetingRoom getRoom( int id ){return roomRepository.findById(id).get();}
+    public User getUser( int id ){return userRepository.findById(id).get();}
 
 
     @Override
-    public meetingRoom addRoom(meetingRoom room) {
-        return roomRepository.save(room);
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
-    public meetingRoom deleteRoom(int id) {
-        meetingRoom room = roomRepository.findById(id).get();
-        roomRepository.delete(room);
-        return room;
+    public User deleteUser(int id) {
+        User user = userRepository.findById(id).get();
+        userRepository.delete(user);
+        return user;
     }
 
     @Override
-    public meetingRoom updateRoom(int id, meetingRoom room) {
-        meetingRoom updatedRoom = roomRepository.findById(id).get();
-        updatedRoom.setStatus(room.getStatus());
-        updatedRoom.setEquipments(room.getEquipments());
-        updatedRoom.setCapacity(room.getCapacity());
-        updatedRoom.setRoomDevices(room.getRoomDevices());
-        updatedRoom.setRoomBooking(room.getRoomBooking());
-      roomRepository.save(updatedRoom);
-      return updatedRoom;
+    public User updateUser(int id, User user) {
+        User updatedUser = userRepository.findById(id).get();
+        updatedUser.setUserBookings(user.getUserBookings());
+        updatedUser.setUserEmail(user.getUserEmail());
+        updatedUser.setUserName(user.getUserName());
+        updatedUser.setUserTeam(user.getUserTeam());
+      userRepository.save(updatedUser);
+      return updatedUser;
 
 
     }

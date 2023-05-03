@@ -1,17 +1,18 @@
 package com.example.springbootmongodbatlas.service;
 
-import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
+import com.example.springbootmongodbatlas.entity.Bookings.Booking;
+import com.example.springbootmongodbatlas.entity.Users.User;
 
 import java.util.List;
 
-public interface RoomService {
+public interface UserService {
 
-    public meetingRoom getRoom(int id);
-    public List<meetingRoom> getAllRooms();
+    public User getUser(int id);
+    public List<User> getAllUsers();
 
-    public meetingRoom addRoom(meetingRoom room);
+    public User addUser(User user);
 
-    public meetingRoom deleteRoom(int id );
+    public User deleteUser(int id );
 
-    public meetingRoom updateRoom(int id , meetingRoom room);
+    public User updateUser(int id , User user);
 }

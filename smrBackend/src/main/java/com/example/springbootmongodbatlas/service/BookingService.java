@@ -2,6 +2,7 @@ package com.example.springbootmongodbatlas.service;
 
 import com.example.springbootmongodbatlas.entity.Bookings.Booking;
 
+import java.awt.print.Book;
 import java.util.List;
 
 public interface BookingService {
@@ -13,5 +14,6 @@ public interface BookingService {
     public Booking deleteBooking(int id );
 
     public Booking updateBooking(int id , Booking booking);
+    public List<Booking> getMeetingsStartingIn15min();
 
 }

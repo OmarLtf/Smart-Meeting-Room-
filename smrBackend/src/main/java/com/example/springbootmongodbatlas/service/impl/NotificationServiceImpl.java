@@ -1,7 +1,10 @@
 package com.example.springbootmongodbatlas.service.impl;
 
+import com.example.springbootmongodbatlas.entity.Notifications.Notification;
 import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
+import com.example.springbootmongodbatlas.repo.NotificationRepository;
 import com.example.springbootmongodbatlas.repo.RoomRepository;
+import com.example.springbootmongodbatlas.service.NotificationService;
 import com.example.springbootmongodbatlas.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,41 +12,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RoomServiceImpl implements RoomService {
+public class NotificationServiceImpl implements NotificationService {
     @Autowired
-    private RoomRepository roomRepository;
+    private NotificationRepository notificationRepository;
+
     @Override
-    public List<meetingRoom> getAllRooms() {
-        return roomRepository.findAll();
+    public Notification getNotification(int id ){return notificationRepository.findById(id).get();}
+
+
+    @Override
+    public Notification addNotification(Notification notification) {
+        return notificationRepository.save(notification);
     }
 
     @Override
-    public meetingRoom getRoom( int id ){return roomRepository.findById(id).get();}
-
-
-    @Override
-    public meetingRoom addRoom(meetingRoom room) {
-        return roomRepository.save(room);
-    }
-
-    @Override
-    public meetingRoom deleteRoom(int id) {
-        meetingRoom room = roomRepository.findById(id).get();
-        roomRepository.delete(room);
-        return room;
-    }
-
-    @Override
-    public meetingRoom updateRoom(int id, meetingRoom room) {
-        meetingRoom updatedRoom = roomRepository.findById(id).get();
-        updatedRoom.setStatus(room.getStatus());
-        updatedRoom.setEquipments(room.getEquipments());
-        updatedRoom.setCapacity(room.getCapacity());
-        updatedRoom.setRoomDevices(room.getRoomDevices());
-        updatedRoom.setRoomBooking(room.getRoomBooking());
-      roomRepository.save(updatedRoom);
-      return updatedRoom;
-
-
+    public Notification updateNotification(int id, Notification notification) {
+        Notification updatedNotification = notificationRepository.findById(id).get();
+        updatedNotification.setNotificationSent(notification.getNotificationSent());
+        return notificationRepository.save(updatedNotification);
     }
 }

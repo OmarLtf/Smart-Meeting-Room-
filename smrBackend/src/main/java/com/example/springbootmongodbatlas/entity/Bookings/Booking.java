@@ -1,6 +1,6 @@
 package com.example.springbootmongodbatlas.entity.Bookings;
 
-import com.example.springbootmongodbatlas.entity.Notifications.Notifications;
+import com.example.springbootmongodbatlas.entity.Notifications.Notification;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,7 +16,7 @@ public class Booking {
     private Date startTime;
     private Date endTime;
     private BookingStatus bookingStatus;
-    private List<Notifications> notifications;
+    private List<Notification> notifications;
 
     public Booking(Integer id, Integer roomId, Integer userId, Date startTime, Date endTime) {
         this.id = id;
@@ -74,11 +74,11 @@ public class Booking {
         this.bookingStatus = bookingStatus;
     }
 
-    public List<Notifications> getNotifications() {
+    public List<Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(List<Notifications> notifications) {
+    public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
     }
 }

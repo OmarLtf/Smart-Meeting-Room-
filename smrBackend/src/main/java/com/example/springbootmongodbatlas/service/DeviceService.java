@@ -1,17 +1,18 @@
 package com.example.springbootmongodbatlas.service;
 
 import com.example.springbootmongodbatlas.entity.Bookings.Booking;
+import com.example.springbootmongodbatlas.entity.Devices.Device;
 
 import java.util.List;
 
-public interface BookingService {
+public interface DeviceService {
 
-    public Booking getBooking(int id);
-    public List<Booking> getAllBookings();
+    public Device getDevice(int id);
+    public List<Device> getAllDevices();
 
-    public Booking addBooking(Booking booking);
-    public Booking deleteBooking(int id );
+    public Device addDevice(Device device);
+    public Device deleteDevice(int id );
 
-    public Booking updateBooking(int id , Booking booking);
+    public Device updateDevice(int id , Device device);
 
 }

@@ -1,40 +1,41 @@
 package com.example.springbootmongodbatlas.controller;
 
 import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
+import com.example.springbootmongodbatlas.entity.Users.User;
 import com.example.springbootmongodbatlas.service.RoomService;
+import com.example.springbootmongodbatlas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rooms")
-public class RoomController {
+@RequestMapping("/api/user")
+public class UserController {
     @Autowired
-    private RoomService roomService;
+    private UserService userService;
     @GetMapping("/all")
-    public List<meetingRoom> getAllRooms() {
-       return roomService.getAllRooms();
+    public List<User> getAllUsers() {
+       return userService.getAllUsers();
     }
     @GetMapping("/{id}")
-    public meetingRoom getRoom(@PathVariable int id ) {
-        System.out.println(roomService.getRoom(id));
-        return roomService.getRoom(id);
+    public User getUser(@PathVariable int id ) {
+        return userService.getUser(id);
     }
 
     @PostMapping("/insert")
-    public meetingRoom insert(@RequestBody meetingRoom room){
-        return  roomService.addRoom(room);
+    public User insert(@RequestBody User user){
+        return  userService.addUser(user);
     }
 
     @PutMapping("/update/{id}")
-   public meetingRoom update(@PathVariable int id,@RequestBody meetingRoom room ){
-       return roomService.updateRoom(id,room);
+   public User update(@PathVariable int id,@RequestBody User user ){
+       return userService.updateUser(id, user);
     }
 
     @DeleteMapping("/delete/{id}")
-    public meetingRoom delete(@PathVariable int id ){
+    public User delete(@PathVariable int id ){
 
-        return  roomService.deleteRoom(id);
+        return userService.deleteUser(id);
     }
 }

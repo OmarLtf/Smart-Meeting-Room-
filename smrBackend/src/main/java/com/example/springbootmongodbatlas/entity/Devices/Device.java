@@ -1,30 +1,14 @@
-package com.example.springbootmongodbatlas.entity.Bookings;
+package com.example.springbootmongodbatlas.entity.Devices;
 
-import com.example.springbootmongodbatlas.entity.Notifications.Notification;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.List;
-
-@Document(collection = "Bookings")
-public class Booking {
+@Document(collection = "Devices")
+public class Device {
     @Id
     private Integer id;
-    private Integer roomId;
-    private Integer userId;
-    private Date startTime;
-    private Date endTime;
-    private BookingStatus bookingStatus;
-    private List<Notification> notifications;
-
-    public Booking(Integer id, Integer roomId, Integer userId, Date startTime, Date endTime) {
-        this.id = id;
-        this.roomId = roomId;
-        this.userId = userId;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
+    private String connectionString;
+    private DeviceStatus deviceStatus;
 
     public Integer getId() {
         return id;
@@ -34,51 +18,27 @@ public class Booking {
         this.id = id;
     }
 
-    public Integer getRoomId() {
-        return roomId;
+    public String getConnectionString() {
+        return connectionString;
     }
 
-    public void setRoomId(Integer roomId) {
-        this.roomId = roomId;
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public DeviceStatus getDeviceStatus() {
+        return deviceStatus;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setDeviceStatus(DeviceStatus deviceStatus) {
+        this.deviceStatus = deviceStatus;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Device(Integer id, String connectionString, DeviceStatus deviceStatus) {
+        this.id = id;
+        this.connectionString = connectionString;
+        this.deviceStatus = deviceStatus;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
 
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public BookingStatus getBookingStatus() {
-        return bookingStatus;
-    }
-
-    public void setBookingStatus(BookingStatus bookingStatus) {
-        this.bookingStatus = bookingStatus;
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
 }

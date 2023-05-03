@@ -1,17 +1,16 @@
 package com.example.springbootmongodbatlas.service;
 
+import com.example.springbootmongodbatlas.entity.Notifications.Notification;
+import com.example.springbootmongodbatlas.entity.Notifications.NotificationType;
 import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
 
 import java.util.List;
 
-public interface RoomService {
+public interface NotificationService {
 
-    public meetingRoom getRoom(int id);
-    public List<meetingRoom> getAllRooms();
+    public Notification getNotification(int id);
 
-    public meetingRoom addRoom(meetingRoom room);
+    public Notification addNotification(Notification notification);
 
-    public meetingRoom deleteRoom(int id );
-
-    public meetingRoom updateRoom(int id , meetingRoom room);
+    public Notification updateNotification(int id , Notification notification);
 }
