@@ -1,11 +1,11 @@
-// import TestComponent from "./UserMeetings/TestComponent.jsx";
-import MyMeetingsTable from "./UserMeetings/MyMeetingsTable.jsx";
+import SignInPage from "./Pages/General/SignIn.jsx";
 
+import SignUp from "./Pages/General/SignUp.jsx";
 function App() {
   return (
     <>
-      <MyMeetingsTable></MyMeetingsTable>
-      {/* <TestComponent></TestComponent> */}
+      <SignUp></SignUp>
+      <SignInPage></SignInPage>
     </>
   );
 }
