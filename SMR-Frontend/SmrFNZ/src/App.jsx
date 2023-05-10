@@ -1,11 +1,9 @@
-import SignInPage from "./Pages/General/SignIn.jsx";
+import SideBar from "./Pages/General/SideBar.jsx";
 
-import SignUp from "./Pages/General/SignUp.jsx";
 function App() {
   return (
     <>
-      <SignUp></SignUp>
-      <SignInPage></SignInPage>
+      <SideBar></SideBar>
     </>
   );
 }
