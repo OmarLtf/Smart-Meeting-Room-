@@ -49,6 +49,7 @@ const CalendarComponent = () => {
 
   return (
     <FullCalendar
+      height={600}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
       initialView="dayGridMonth"
       events={events}

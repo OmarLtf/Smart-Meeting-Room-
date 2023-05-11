@@ -2,7 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+// import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BackgroundImage from "../../Assets/Hero-WillisTower.jpg";
-
+import { Link } from "react-router-dom";
 function Copyright(props) {
   return (
     <Typography
@@ -117,24 +117,22 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
+              <Link to="/">
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+              </Link>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="./SignUp" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                <Grid item container direction="row" justifyContent="right">
+                  <Link to="./signup">
+                    <p style={{ margin: 0 }}>
+                      {"D'ont have an account? Sign Up"}
+                    </p>
                   </Link>
                 </Grid>
               </Grid>

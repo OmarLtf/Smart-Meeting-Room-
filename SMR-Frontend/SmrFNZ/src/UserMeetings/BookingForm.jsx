@@ -47,28 +47,37 @@ export default function FormPropsTextFields() {
     <Box
       component="form"
       sx={{
+        padding: "5px",
+        marginRight: "10px",
         // borderRadius: "10px",
         // backgroundColor: "gray",
         // padding: "20px",
         maxWidth: "45ch",
+
         "& .MuiTextField-root": { m: 1, width: "40ch" },
       }}
       noValidate
       autoComplete="off"
     >
       <div>
-        <TextField
-          required
-          id="outlined-required"
-          label="Meeting Title"
-          defaultValue=""
-        />
-        <div>
-          <FormControl sx={{ m: 1, minWidth: "40ch" }}>
+        <DemoContainer components={["TimePicker"]}>
+          <TextField
+            required
+            id="outlined-required"
+            label="Meeting Title"
+            defaultValue=""
+          />
+        </DemoContainer>
+
+        <DemoContainer components={["TimePicker"]}>
+          {/* <FormControl sx={{ m: 1, minWidth: "40ch" }}> */}
+
+          <FormControl fullWidth sx={{ m: 1, maxWidh: "40ch" }}>
             <InputLabel id="demo-simple-select-helper-label">
               Meeting Room
             </InputLabel>
             <Select
+              sx={{ maxWidh: "40ch" }}
               required
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
@@ -84,7 +93,7 @@ export default function FormPropsTextFields() {
               <MenuItem value={"Hannibal"}>Annibal</MenuItem>
             </Select>
           </FormControl>
-        </div>
+        </DemoContainer>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DatePicker"]}>

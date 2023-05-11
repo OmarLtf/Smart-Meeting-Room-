@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Link, useRoutes } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -23,13 +23,12 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import Typography from "@mui/material/Typography";
-import RoomInformation from "../../AdminRooms/RoomInformationView.jsx";
+import NotFound404 from "./404NotFound.jsx";
+import Dashboard from "../UserInterfaces/Dashboard.jsx";
+import MyMeetings from "../UserInterfaces/UserMeetings.jsx";
 
+//max = 1530
 const drawerWidth = 270;
-
-function Dashboard() {
-  return <h1>Dashboard</h1>;
-}
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -46,6 +45,8 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
         duration: theme.transitions.duration.enteringScreen,
       }),
       marginLeft: 0,
+      marginTop: 30,
+      maxWidth: "82%",
     }),
   })
 );
@@ -76,13 +77,12 @@ const GradientAppBar = styled(AppBar)({
     right: 0,
     height: "5px",
     background:
-      "linear-gradient(90deg, rgba(255,175,232,1) 0%, rgba(240,62,188,1) 15%, rgba(246,81,75,1) 61%, rgba(252,201,22,1) 80%, rgba(255,222,107,1) 99%)",
+      "linear-gradient(90deg, rgba(255,170,232,1) 0%, rgba(240,62,188,1) 5%, rgba(246,81,75,1) 61%, rgba(252,201,22,1) 80%, rgba(255,222,107,1) 99%)",
   },
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-  background:
-    "linear-gradient(45deg, rgba(255,175,232,1) 0%, rgba(240,62,188,1) 0%, rgba(246,81,75,1) 61%, rgba(252,201,22,1) 95%, rgba(255,222,107,1) 99%)",
+  backgroundColor: "black",
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 1),
@@ -103,6 +103,19 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const routes = useRoutes([
+    { path: "/", element: <Dashboard></Dashboard> },
+    { path: "/dashboard", element: <Dashboard /> },
+    {
+      path: "/meetings",
+      element: <MyMeetings></MyMeetings>,
+    },
+    { path: "/admin_dashboard", element: <h1>Admin Dashboard</h1> },
+    { path: "/rooms", element: <h1>Admin Rooms</h1> },
+    { path: "/profile", element: <h1>Profile</h1> },
+    { path: "/404", element: <NotFound404 /> },
+  ]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -155,9 +168,10 @@ export default function PersistentDrawerLeft() {
           <IconButton
             sx={{
               padding: "5px",
+              color: "white",
               "&:hover": {
-                backgroundColor: "black",
-                color: "white",
+                backgroundColor: "white",
+                color: "black",
                 padding: "5px",
               },
             }}
@@ -170,7 +184,13 @@ export default function PersistentDrawerLeft() {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider sx={{ borderTop: "5px solid black" }} />
+        <Divider
+          sx={{
+            backgroundImage:
+              "linear-gradient(90deg, rgba(255,222,107,1) 0%, rgba(252,201,22,1) 15%, rgba(246,81,75,1) 61%, rgba(240,62,188,1) 90%, rgba(255,170,232,1) 100%)",
+            height: 5,
+          }}
+        />
 
         <List>
           {[
@@ -179,45 +199,75 @@ export default function PersistentDrawerLeft() {
             "Admin Dashboard",
             "Rooms Management",
           ].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {text === "Dashboard" ? (
-                    <SpaceDashboardIcon />
-                  ) : text === "My Meetings" ? (
-                    <GroupsIcon />
-                  ) : text === "Admin Dashboard" ? (
-                    <AdminPanelSettingsIcon />
-                  ) : (
-                    <MeetingRoomIcon />
-                  )}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
+            <Link
+              style={{ textDecoration: "none", color: "#2B2B2B" }}
+              key={text}
+              to={
+                text === "Dashboard"
+                  ? "/dashboard"
+                  : text === "My Meetings"
+                  ? "/meetings"
+                  : text === "Admin Dashboard"
+                  ? "/admin_dashboard"
+                  : text === "Rooms Management"
+                  ? "/rooms"
+                  : "/404"
+              }
+            >
+              <ListItem key={text} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {text === "Dashboard" ? (
+                      <SpaceDashboardIcon />
+                    ) : text === "My Meetings" ? (
+                      <GroupsIcon />
+                    ) : text === "Admin Dashboard" ? (
+                      <AdminPanelSettingsIcon />
+                    ) : (
+                      <MeetingRoomIcon />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           ))}
         </List>
         <Divider />
         <List>
           {["Profile", "Log out"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {text == "Profile" ? <AccountCircleIcon /> : <LogoutIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
+            <Link
+              style={{ textDecoration: "none", color: "#2B2B2B" }}
+              key={text}
+              to={
+                text === "Profile"
+                  ? "/profile"
+                  : text === "Log out"
+                  ? "/signin"
+                  : "/404"
+              }
+            >
+              <ListItem key={text} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {text == "Profile" ? <AccountCircleIcon /> : <LogoutIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           ))}
         </List>
       </Drawer>
-      <Main open={open}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="test" element={<RoomInformation />} />
-          </Routes>
-        </BrowserRouter>
+      <Main
+        sx={{
+          backgroundColor: "#F6F6F6",
+          marginTop: "30px",
+          maxWidth: open === true ? "82%" : "100%",
+        }}
+        open={open}
+      >
+        {routes}
       </Main>
     </Box>
   );

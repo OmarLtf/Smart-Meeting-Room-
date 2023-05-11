@@ -1,5 +1,4 @@
 /*
-
 - Meeting Title 
 - Day 
 - StartTime 
@@ -7,8 +6,8 @@
 - Room
 - Invite People (send e-mail)
 - Commments ( If invites people )
-
 */
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -21,7 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-export default function FormPropsTextFields() {
+export default function FormPropsTextFields({ hideDrawer }) {
   // Handle Click for Save Button
   const [loading, setLoading] = React.useState(false);
   function handleClick() {
@@ -32,6 +31,10 @@ export default function FormPropsTextFields() {
     }, 500);
   }
 
+  const hide = () => {
+    hideDrawer(false);
+  };
+
   return (
     <Box
       component="form"
@@ -40,10 +43,11 @@ export default function FormPropsTextFields() {
         // backgroundColor: "gray",
         // padding: "20px",
         maxWidth: "45ch",
-        "& .MuiTextField-root": { m: 1, width: "40ch" },
+        "& .MuiTextField-root": { m: 1, width: "45ch" },
       }}
       noValidate
       autoComplete="off"
+      margin={5}
     >
       <div>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -72,7 +76,11 @@ export default function FormPropsTextFields() {
           marginRight: "4ch",
         }}
       >
-        <LoadingButton startIcon={<ArrowBackIosNewIcon />} variant="contained">
+        <LoadingButton
+          onClick={hide}
+          startIcon={<ArrowBackIosNewIcon />}
+          variant="contained"
+        >
           <span>CANCEL</span>
         </LoadingButton>
         <LoadingButton
