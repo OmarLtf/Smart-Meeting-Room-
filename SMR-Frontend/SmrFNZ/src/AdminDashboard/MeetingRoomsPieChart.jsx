@@ -1,7 +1,6 @@
-import Typography from "@mui/material/Typography";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -27,32 +26,40 @@ const PieChart = () => {
     ],
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+      title: {
+        display: true,
+        text: "Meeting Rooms Usage",
+        font: {
+          size: 20,
+        },
+      },
+    },
+  };
+
   return (
     <Box
       sx={{
         width: 300,
-        backgroundColor: "#FBFBFB",
+        height: 350,
+        backgroundColor: "white",
         borderRadius: "10px",
-        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+        // boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "20px",
+        margin: "20px",
       }}
     >
-      <Pie data={chartData} />
-      <Typography
-        gutterBottom
-        variant="h5"
-        sx={{
-          textAlign: "center",
-          color: "#333333",
-          marginTop: "10px",
-        }}
-      >
-        Meeting Room Usage per Week
-      </Typography>
+      <Pie options={options} data={chartData} />
     </Box>
   );
 };

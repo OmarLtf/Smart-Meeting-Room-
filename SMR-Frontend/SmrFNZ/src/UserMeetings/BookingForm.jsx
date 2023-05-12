@@ -14,7 +14,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
@@ -62,6 +62,14 @@ export default function FormPropsTextFields() {
       <div>
         <DemoContainer components={["TimePicker"]}>
           <TextField
+            sx={{
+              backgroundColor: "white",
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
+              boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+              borderRadius: "5px",
+            }}
             required
             id="outlined-required"
             label="Meeting Title"
@@ -77,7 +85,14 @@ export default function FormPropsTextFields() {
               Meeting Room
             </InputLabel>
             <Select
-              sx={{ maxWidh: "40ch" }}
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
               required
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
@@ -97,19 +112,52 @@ export default function FormPropsTextFields() {
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DatePicker"]}>
-            <DatePicker required label="Basic date picker" />
+            <DatePicker
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
+              required
+              label="Basic date picker"
+            />
           </DemoContainer>
         </LocalizationProvider>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["TimePicker"]}>
-            <TimePicker required label="Start Time" />
+            <TimePicker
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
+              required
+              label="Start Time"
+            />
           </DemoContainer>
         </LocalizationProvider>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["TimePicker"]}>
-            <TimePicker required label="End Time" />
+            <TimePicker
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
+              required
+              label="End Time"
+            />
           </DemoContainer>
         </LocalizationProvider>
       </div>

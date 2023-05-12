@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 const UserMeetings = () => {
   return (
     <>
-      <Grid container>
+      <Grid sx={{ height: "91vh" }} container>
         <Grid item xs={12} md={3}>
           <Typography sx={{ padding: "10px" }} variant="h4">
             New Meeting

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Link, useRoutes } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
+import { Box } from "@mui/material";
+import Drawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
@@ -26,6 +26,9 @@ import Typography from "@mui/material/Typography";
 import NotFound404 from "./404NotFound.jsx";
 import Dashboard from "../UserInterfaces/Dashboard.jsx";
 import MyMeetings from "../UserInterfaces/UserMeetings.jsx";
+import AdminDashboard from "../UserInterfaces/AdminDashboard.jsx";
+import LooksTwoIcon from "@mui/icons-material/LooksTwo";
+import AdminRooms from "../UserInterfaces/AdminRooms.jsx";
 
 //max = 1530
 const drawerWidth = 270;
@@ -111,14 +114,14 @@ export default function PersistentDrawerLeft() {
       path: "/meetings",
       element: <MyMeetings></MyMeetings>,
     },
-    { path: "/admin_dashboard", element: <h1>Admin Dashboard</h1> },
-    { path: "/rooms", element: <h1>Admin Rooms</h1> },
-    { path: "/profile", element: <h1>Profile</h1> },
+    { path: "/admin_dashboard", element: <AdminDashboard></AdminDashboard> },
+    { path: "/rooms", element: <AdminRooms></AdminRooms> },
+
     { path: "/404", element: <NotFound404 /> },
   ]);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ height: "100%", backgroundColor: "#F6F6F6", display: "flex" }}>
       <CssBaseline />
       <GradientAppBar
         sx={{
@@ -157,13 +160,33 @@ export default function PersistentDrawerLeft() {
         open={open}
       >
         <DrawerHeader>
-          <Typography
-            sx={{ fontWeight: "bold", color: "#FEFDFC" }}
-            variant="h5"
-            component="h1"
-          >
-            FNZ 2meet
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              sx={{ fontWeight: "bold", color: "#FEFDFC" }}
+              variant="h5"
+              component="h1"
+            >
+              FNZ
+            </Typography>
+            <LooksTwoIcon
+              sx={{
+                color: "white",
+                fontSize: "2rem",
+                backgroundSize: "50%",
+                background:
+                  "linear-gradient(45deg, rgba(255,170,232,1) 0%, rgba(240,62,188,1) 5%, rgba(246,81,75,1) 40%, rgba(252,201,22,1) 80%, rgba(255,222,107,1) 99%)",
+                borderRadius: "0.25rem",
+                margin: "3px",
+              }}
+            ></LooksTwoIcon>
+            <Typography
+              sx={{ fontWeight: "bold", color: "#FEFDFC" }}
+              variant="h5"
+              component="h1"
+            >
+              Meet
+            </Typography>
+          </Box>
 
           <IconButton
             sx={{
@@ -235,17 +258,11 @@ export default function PersistentDrawerLeft() {
         </List>
         <Divider />
         <List>
-          {["Profile", "Log out"].map((text) => (
+          {["Log out"].map((text) => (
             <Link
               style={{ textDecoration: "none", color: "#2B2B2B" }}
               key={text}
-              to={
-                text === "Profile"
-                  ? "/profile"
-                  : text === "Log out"
-                  ? "/signin"
-                  : "/404"
-              }
+              to={text === "Log out" ? "/signin" : "/404"}
             >
               <ListItem key={text} disablePadding>
                 <ListItemButton>
@@ -263,7 +280,9 @@ export default function PersistentDrawerLeft() {
         sx={{
           backgroundColor: "#F6F6F6",
           marginTop: "30px",
-          maxWidth: open === true ? "82%" : "100%",
+          // maxWidth: open === true ? "82%" : "100%",
+          maxWidth: open === true ? "83%" : "100%",
+          height: "100%",
         }}
         open={open}
       >

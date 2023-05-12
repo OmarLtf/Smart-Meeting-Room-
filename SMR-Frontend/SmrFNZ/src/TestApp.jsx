@@ -1,9 +1,9 @@
-import UserDashboard from "./Pages/UserInterfaces/UserMeetings.jsx";
+import AdminDashboard from "./Pages/UserInterfaces/AdminDashboard.jsx";
 
 function App() {
   return (
     <>
-      <UserDashboard></UserDashboard>
+      <AdminDashboard></AdminDashboard>
     </>
   );
 }

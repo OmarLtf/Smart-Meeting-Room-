@@ -7,7 +7,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 ChartJS.register(
   CategoryScale,
@@ -42,19 +42,19 @@ const BarChart = () => {
       {
         label: "Team D",
         data: [3, 2, 5, 4],
-        backgroundColor: "#FF8C00",
+        backgroundColor: "#4BC0C0",
         borderWidth: 1,
       },
       {
         label: "Team E",
         data: [6, 1, 2, 3],
-        backgroundColor: "#800080",
+        backgroundColor: "#FF9F40",
         borderWidth: 1,
       },
       {
         label: "Team F",
         data: [4, 3, 1, 6],
-        backgroundColor: "#008080",
+        backgroundColor: "#9966FF",
         borderWidth: 1,
       },
     ],
@@ -62,6 +62,8 @@ const BarChart = () => {
 
   const options = {
     indexAxis: "x",
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom",
@@ -79,12 +81,15 @@ const BarChart = () => {
   return (
     <Box
       sx={{
-        margin: "10px",
-        height: "370px",
-        width: "700px",
-        backgroundColor: "#FBFBFB",
+        margin: "30px",
+        height: "350px",
+        width: "630px",
+        minHeight: "222px",
+        minWidth: "400px",
+        // minWidth: "1px",
+        backgroundColor: "white",
         borderRadius: "10px",
-        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+        // boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
         padding: "20px",
       }}
     >

@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -97,6 +97,9 @@ const options = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
+    legend: {
+      position: "bottom",
+    },
     title: {
       display: true,
       text: "Teams Meetings Count",
@@ -125,12 +128,15 @@ const LineChart = () => {
   return (
     <Box
       sx={{
-        margin: "10px",
-        height: "370px",
-        width: "700px",
-        backgroundColor: "#FBFBFB",
+        margin: "30px",
+        height: "350px",
+        width: "630px",
+        minHeight: "222px",
+        minWidth: "400px",
+        // minWidth: "1px",
+        backgroundColor: "white",
         borderRadius: "10px",
-        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+        // boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
         padding: "20px",
       }}
     >

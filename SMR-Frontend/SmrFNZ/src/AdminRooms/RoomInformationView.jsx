@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -14,7 +14,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function MiddleDividers() {
+export default function MiddleDividers({ hideDrawer }) {
   const rows = [
     {
       deviceName: "device1",
@@ -28,8 +28,11 @@ export default function MiddleDividers() {
     },
   ];
 
+  const hide = () => {
+    hideDrawer(false);
+  };
   return (
-    <Box sx={{ width: "100%", maxWidth: 500, bgcolor: "white" }}>
+    <Box sx={{ width: 450, maxWidth: 500, bgcolor: "white", padding: 3 }}>
       <Box sx={{ my: 3, mx: 2 }}>
         <Grid container alignItems="center">
           <Grid item xs>
@@ -114,7 +117,7 @@ export default function MiddleDividers() {
         </Stack>
       </Box>
       <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
-        <Button>Back</Button>
+        <Button onClick={hide}>Back</Button>
       </Box>
     </Box>
   );

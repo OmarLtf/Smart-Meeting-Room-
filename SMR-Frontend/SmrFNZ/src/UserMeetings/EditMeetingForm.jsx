@@ -9,7 +9,7 @@
 */
 
 import * as React from "react";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -52,19 +52,52 @@ export default function FormPropsTextFields({ hideDrawer }) {
       <div>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DatePicker"]}>
-            <DatePicker required label="Basic date picker" />
+            <DatePicker
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
+              required
+              label="Basic date picker"
+            />
           </DemoContainer>
         </LocalizationProvider>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["TimePicker"]}>
-            <TimePicker required label="Start Time" />
+            <TimePicker
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
+              required
+              label="Start Time"
+            />
           </DemoContainer>
         </LocalizationProvider>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["TimePicker"]}>
-            <TimePicker required label="End Time" />
+            <TimePicker
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
+              required
+              label="End Time"
+            />
           </DemoContainer>
         </LocalizationProvider>
       </div>

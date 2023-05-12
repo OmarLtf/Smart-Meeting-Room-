@@ -42,18 +42,18 @@ export default function DraggableDialog() {
         aria-labelledby="draggable-dialog-title"
       >
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
-          Delete this item
+          Cancel Meeting
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to deleted this item ?
+            Are you sure you want to cancel this meeting?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose}>
-            Cancel
+            Discard
           </Button>
-          <Button onClick={handleClose}>Delete</Button>
+          <Button onClick={handleClose}>Confirm</Button>
         </DialogActions>
       </Dialog>
     </div>

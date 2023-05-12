@@ -18,6 +18,7 @@ const UserDashboard = () => {
               display: "none",
             },
             position: "relative",
+            height: "100%",
           }}
           container
           direction="row"

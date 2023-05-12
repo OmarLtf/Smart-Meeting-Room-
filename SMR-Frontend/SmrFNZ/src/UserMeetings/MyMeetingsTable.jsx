@@ -20,6 +20,12 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import EditMeetingForm from "./EditMeetingForm.jsx";
 import Drawer from "@mui/material/Drawer";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Draggable from "react-draggable";
 
 const rows = [
   {
@@ -52,8 +58,29 @@ const rows = [
   },
 ];
 
+function PaperComponent(props) {
+  return (
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} />
+    </Draggable>
+  );
+}
+
 export default function BasicTable() {
   const [state, setState] = React.useState(false);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const hideDrawerFromChild = (value) => {
     setState(value);
@@ -146,8 +173,9 @@ export default function BasicTable() {
                     size="small"
                     variant="outlined"
                     startIcon={<HighlightOffIcon />}
+                    onClick={handleClickOpen}
                   >
-                    Cancle
+                    cancel
                   </Button>
                   <Button
                     size="small"
@@ -163,9 +191,41 @@ export default function BasicTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Drawer anchor="right" open={state} onClose={toggleDrawer(false)}>
+      <Drawer
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "#F6F6F6",
+          },
+        }}
+        anchor="right"
+        open={state}
+        onClose={toggleDrawer(false)}
+      >
         <EditMeetingForm hideDrawer={hideDrawerFromChild}></EditMeetingForm>
       </Drawer>
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          PaperComponent={PaperComponent}
+          aria-labelledby="draggable-dialog-title"
+        >
+          <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+            Cancel Meeting
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to cancel this meeting?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose}>
+              Discard
+            </Button>
+            <Button onClick={handleClose}>Confirm</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 }

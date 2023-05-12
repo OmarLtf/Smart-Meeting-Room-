@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
@@ -74,18 +74,42 @@ export default function FormPropsTextFields() {
     >
       <div>
         <TextField
+          sx={{
+            backgroundColor: "white",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+            boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "5px",
+          }}
           required
           id="outlined-required"
           label="Room ID"
           defaultValue=""
         />
         <TextField
+          sx={{
+            backgroundColor: "white",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+            boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "5px",
+          }}
           required
           id="outlined-required"
           label="Room Name"
           defaultValue=""
         />
         <TextField
+          sx={{
+            backgroundColor: "white",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+            boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "5px",
+          }}
           required
           type="number"
           id="outlined-required"
@@ -98,6 +122,14 @@ export default function FormPropsTextFields() {
               Room Location
             </InputLabel>
             <Select
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
               required
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
@@ -123,6 +155,14 @@ export default function FormPropsTextFields() {
 
         <div>
           <TextField
+            sx={{
+              backgroundColor: "white",
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
+              boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+              borderRadius: "5px",
+            }}
             id="outlined-required"
             label="Available Materials"
             value={materials.join(", ")}
@@ -132,6 +172,14 @@ export default function FormPropsTextFields() {
               Room Materials
             </InputLabel>
             <Select
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
               required
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
@@ -153,6 +201,14 @@ export default function FormPropsTextFields() {
       </div>
       <div>
         <TextField
+          sx={{
+            backgroundColor: "white",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+            boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "5px",
+          }}
           required
           type="number"
           id="outlined-required"
@@ -166,6 +222,14 @@ export default function FormPropsTextFields() {
               Device {index + 1}
             </InputLabel>
             <Select
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+              }}
               required
               labelId={`device${index}-label`}
               id={`device${index}`}
