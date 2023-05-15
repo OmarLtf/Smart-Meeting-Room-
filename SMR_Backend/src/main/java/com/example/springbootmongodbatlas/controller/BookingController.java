@@ -15,26 +15,37 @@ import java.util.List;
 public class BookingController {
     @Autowired
     private BookingService bookingService;
+    @CrossOrigin(origins ="http://localhost:5173")
     @GetMapping("/all")
     public List<Booking> getAllBookings() {
        return bookingService.getAllBookings();
     }
+
+    @CrossOrigin(origins ="http://localhost:5173")
+    @GetMapping("/userBooking/{id}")
+    public List<Booking> getUserBookings(@PathVariable int id){
+        return bookingService.getUserBookings(id);
+    }
+
+    @CrossOrigin(origins ="http://localhost:5173")
     @GetMapping("/{id}")
     public Booking getBooking(@PathVariable int id ) {
         System.out.println(bookingService.getBooking(id));
         return bookingService.getBooking(id);
     }
-
+    @CrossOrigin(origins ="http://localhost:5173")
     @PostMapping("/insert")
     public Booking insert(@RequestBody Booking booking){
         return  bookingService.addBooking(booking);
     }
 
+    @CrossOrigin(origins ="http://localhost:5173")
     @PutMapping("/update/{id}")
    public Booking update(@PathVariable int id,@RequestBody Booking booking ){
        return bookingService.updateBooking(id, booking);
     }
 
+    @CrossOrigin(origins ="http://localhost:5173")
     @DeleteMapping("/delete/{id}")
     public Booking delete(@PathVariable int id ){
 

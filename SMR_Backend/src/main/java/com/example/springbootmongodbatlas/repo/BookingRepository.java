@@ -12,5 +12,8 @@ public interface BookingRepository extends MongoRepository<Booking,Integer> {
     @Query("{ 'startTime' : { $gte: ?0, $lte: ?1 } }")
     List<Booking> findAllBookingsForMeetingsStartingInNext15Min(Date now, Date in15minLater);
 
+    @Query("{'userId' :  ?0}")
+    List<Booking> findBookingByUserId(int id);
+
 
 }

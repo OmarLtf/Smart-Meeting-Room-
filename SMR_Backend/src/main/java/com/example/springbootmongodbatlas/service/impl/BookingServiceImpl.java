@@ -63,4 +63,9 @@ public class BookingServiceImpl implements BookingService {
         return bookingsIn15min;
 
     }
+
+    @Override
+    public List<Booking> getUserBookings(int id){
+        return bookingRepository.findBookingByUserId( id);
+    }
 }

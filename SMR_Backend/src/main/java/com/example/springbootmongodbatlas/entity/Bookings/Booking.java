@@ -13,19 +13,26 @@ public class Booking {
     private Integer id;
     private Integer roomId;
     private Integer userId;
+
+    private String title;
     private Date startTime;
     private Date endTime;
     private BookingStatus bookingStatus;
     private List<Notification> notifications;
 
-    public Booking(Integer id, Integer roomId, Integer userId, Date startTime, Date endTime) {
+    public Booking(Integer id, String title, Integer roomId, Integer userId, Date startTime, Date endTime) {
         this.id = id;
+        this.title = title;
         this.roomId = roomId;
         this.userId = userId;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
+
+    public String getTitle() { return title;}
+
+    public void setTitle(String title){ this.title = title;}
     public Integer getId() {
         return id;
     }
