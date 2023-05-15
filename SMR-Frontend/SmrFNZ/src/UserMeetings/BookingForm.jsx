@@ -23,25 +23,100 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { TimePicker } from "@mui/x-date-pickers";
+
+import Axios from "axios";
 
 export default function FormPropsTextFields() {
   const [meetingRoom, setMeetingRoom] = React.useState("");
+  const [title, setTitle] = React.useState("");
+  const [date, setDate] = React.useState("");
+  const [startTime, setStartTime] = React.useState(null);
+  const [endTime, setEndTime] = React.useState(null);
 
-  // Handle Change for Meeting Room Select Input
-  const handleChange = (event) => {
-    setMeetingRoom(event.target.value);
+  const [id, setId] = React.useState(0);
+
+  const handleStartTimeChange = (value) => {
+    if (date) {
+      const updatedStartTime = value.set("date", date.date());
+      const finalStartTime = updatedStartTime.add(1, "hour");
+      setStartTime(finalStartTime);
+    } else {
+      const finalStartTime = value.add(1, "hour");
+      setStartTime(finalStartTime);
+    }
   };
+
+  const handleEndTimeChange = (value) => {
+    if (date) {
+      const updatedEndTime = value.set("date", date.date());
+      const finalEndTime = updatedEndTime.add(1, "hour");
+      setEndTime(finalEndTime);
+    } else {
+      const finalEndTime = value.add(1, "hour");
+      setEndTime(finalEndTime);
+    }
+  };
+  // Handle Change for Meeting Room Select Input
 
   // Handle Click for Save Button
   const [loading, setLoading] = React.useState(false);
-  function handleClick() {
-    setLoading(true);
+  // function handleClick() {
+  //   setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 500);
+  // }
+
+  const saveMeeting = () => {
+    setLoading(true);
+    Axios.post("http://localhost:8080/api/booking/insert", {
+      // title: title,
+      // userId: 111,
+      // room: meetingRoom,
+      // date: date,
+      // startTime: startTime,
+      // endTime: endTime,
+
+      id: id,
+      roomId:
+        meetingRoom == "Carthage"
+          ? 1
+          : meetingRoom == "Hannon"
+          ? 2
+          : meetingRoom == "Annibal"
+          ? 3
+          : meetingRoom == "Cantine"
+          ? 4
+          : 5,
+      title: title,
+      userId: 5678,
+      startTime: startTime,
+      endTime: endTime,
+      bookingStatus: "PENDING",
+      notifications: [
+        {
+          notificationType: "REMINDER",
+          notificationSent: false,
+        },
+        {
+          notificationType: "CONFIRMATION",
+          notificationSent: false,
+        },
+        {
+          notificationType: "CANCELLATION",
+          notificationSent: false,
+        },
+      ],
+    }).then(() => {
+      console.log("sucessful insert");
+      setId(id + 1);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    });
+  };
 
   return (
     <Box
@@ -74,6 +149,7 @@ export default function FormPropsTextFields() {
             id="outlined-required"
             label="Meeting Title"
             defaultValue=""
+            onChange={(event) => setTitle(event.target.value)}
           />
         </DemoContainer>
 
@@ -98,14 +174,18 @@ export default function FormPropsTextFields() {
               id="demo-simple-select-helper"
               value={meetingRoom}
               label="Meeting Room"
-              onChange={handleChange}
+              onChange={(event) => {
+                console.log(event.target.value.roomId);
+                setMeetingRoom(event.target.value);
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
               <MenuItem value={"Carthage"}>Carthage</MenuItem>
               <MenuItem value={"Hannon"}>Hannon</MenuItem>
-              <MenuItem value={"Hannibal"}>Annibal</MenuItem>
+              <MenuItem value={"Annibal"}>Annibal</MenuItem>
+              <MenuItem value={"Cantine"}>Cantine</MenuItem>
             </Select>
           </FormControl>
         </DemoContainer>
@@ -123,6 +203,10 @@ export default function FormPropsTextFields() {
               }}
               required
               label="Basic date picker"
+              onChange={(value) => {
+                console.log(value);
+                setDate(value);
+              }}
             />
           </DemoContainer>
         </LocalizationProvider>
@@ -140,6 +224,7 @@ export default function FormPropsTextFields() {
               }}
               required
               label="Start Time"
+              onChange={handleStartTimeChange}
             />
           </DemoContainer>
         </LocalizationProvider>
@@ -157,6 +242,7 @@ export default function FormPropsTextFields() {
               }}
               required
               label="End Time"
+              onChange={handleEndTimeChange}
             />
           </DemoContainer>
         </LocalizationProvider>
@@ -171,7 +257,7 @@ export default function FormPropsTextFields() {
       >
         <LoadingButton
           color="secondary"
-          onClick={handleClick}
+          onClick={saveMeeting}
           loading={loading}
           loadingPosition="start"
           startIcon={<SaveIcon />}

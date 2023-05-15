@@ -1,12 +1,4 @@
-/*
-- Meeting Title
-- Room
-- Date
-- Time
-- Edit
-
-*/
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -16,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
+
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import EditMeetingForm from "./EditMeetingForm.jsx";
@@ -26,37 +19,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Draggable from "react-draggable";
-
-const rows = [
-  {
-    title: "Team Meeting",
-    room: "Carthage",
-    date: "2023-05-10",
-    startTime: "14:30",
-    endTime: "15:30",
-  },
-  {
-    title: "Project Planning",
-    room: "Cantine",
-    date: "2023-05-11",
-    startTime: "10:00",
-    endTime: "11:30",
-  },
-  {
-    title: "Design Review",
-    room: "Hannibal",
-    date: "2023-05-12",
-    startTime: "13:00",
-    endTime: "14:30",
-  },
-  {
-    title: "Client Presentation",
-    room: "Carthage",
-    date: "2023-05-13",
-    startTime: "11:00",
-    endTime: "12:00",
-  },
-];
+import Axios from "axios";
 
 function PaperComponent(props) {
   return (
@@ -70,12 +33,33 @@ function PaperComponent(props) {
 }
 
 export default function BasicTable() {
-  const [state, setState] = React.useState(false);
+  const [userMeetings, setUserMeetings] = useState([]);
+  const [state, setState] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [roomId, setRoomID] = useState();
+  const handleDelete = (meetingId) => {
+    Axios.delete(`http://localhost:8080/api/booking/delete/${meetingId}`)
+      .then((response) => {
+        console.log("Meeting deleted successfully");
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Error deleting meeting:", error);
+        // Handle any errors that occur during deletion
+      });
+  };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (id) => {
+    setRoomID(id);
     setOpen(true);
+  };
+
+  const handleConfirm = () => {
+    handleDelete(roomId);
+    console.log(roomId);
+    setRoomID(null);
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -93,9 +77,34 @@ export default function BasicTable() {
     ) {
       return;
     }
-
     setState(open);
   };
+
+  const getUserMeetings = (userId) => {
+    Axios.get(`http://localhost:8080/api/booking/userBooking/${userId}`).then(
+      (response) => {
+        // const parsedObject = JSON.parse(response.data);
+        const meetingsArray = Object.values(response.data);
+        setUserMeetings(meetingsArray);
+        console.log(userMeetings);
+      }
+    );
+  };
+
+  useEffect(() => {
+    getUserMeetings(5678);
+  });
+
+  const getDate = (value) => {
+    const dateObj = new Date(value);
+    return dateObj.toLocaleDateString();
+  };
+
+  const getTime = (value) => {
+    const dateObj = new Date(value);
+    return dateObj.toLocaleTimeString();
+  };
+
   return (
     <>
       <TableContainer component={Paper} sx={{ maxWidth: 1200, maxHeight: 470 }}>
@@ -120,10 +129,10 @@ export default function BasicTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {userMeetings.map((row, index) => (
               <TableRow
                 hover
-                key={row.title}
+                key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -133,20 +142,20 @@ export default function BasicTable() {
                   <LoadingButton
                     sx={{
                       backgroundColor:
-                        row.room === "Carthage"
+                        row.roomId === 1
                           ? "#f15bb5"
-                          : row.room === "Hannon"
+                          : row.roomId === 2
                           ? "#00bbf9"
-                          : row.room === "Hannibal"
+                          : row.roomId === 3
                           ? "#02dbbe"
                           : "#f5db36",
                       "&:hover": {
                         backgroundColor:
-                          row.room === "Carthage"
+                          row.roomId === 1
                             ? "#f15bb5"
-                            : row.room === "Hannon"
+                            : row.roomId === 2
                             ? "#00bbf9"
-                            : row.room === "Hannibal"
+                            : row.roomId === 3
                             ? "#02dbbe"
                             : "#f5db36",
                         boxShadow: "none",
@@ -159,13 +168,23 @@ export default function BasicTable() {
                     variant="contained"
                   >
                     <span>
-                      <b>{row.room}</b>
+                      <b>
+                        {row.roomId === 1
+                          ? "Carthage"
+                          : row.roomId === 2
+                          ? "Hannon"
+                          : row.roomId === 3
+                          ? "Annibal"
+                          : row.roomId === 4
+                          ? "Cantine"
+                          : "room"}
+                      </b>
                     </span>
                   </LoadingButton>
                 </TableCell>
-                <TableCell align="right">{row.date}</TableCell>
+                <TableCell align="right">{getDate(row.startTime)}</TableCell>
                 <TableCell align="right">
-                  {row.startTime + " -" + row.endTime}
+                  {getTime(row.startTime) + " -" + getTime(row.endTime)}
                 </TableCell>
                 <TableCell align="right">
                   <Button
@@ -173,7 +192,9 @@ export default function BasicTable() {
                     size="small"
                     variant="outlined"
                     startIcon={<HighlightOffIcon />}
-                    onClick={handleClickOpen}
+                    onClick={() => {
+                      handleClickOpen(row.id);
+                    }}
                   >
                     cancel
                   </Button>
@@ -222,7 +243,7 @@ export default function BasicTable() {
             <Button autoFocus onClick={handleClose}>
               Discard
             </Button>
-            <Button onClick={handleClose}>Confirm</Button>
+            <Button onClick={handleConfirm}>Confirm</Button>
           </DialogActions>
         </Dialog>
       </div>
