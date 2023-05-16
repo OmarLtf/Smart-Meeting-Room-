@@ -8,7 +8,7 @@
 
 */
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,46 +18,26 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Drawer from "@mui/material/Drawer";
 import RoomInformation from "./RoomInformationView";
-
-const rows = [
-  {
-    name: "Carthage",
-    id: 1,
-    capacity: 20,
-    devices: 3,
-    status: "available",
-  },
-  {
-    name: "Cantine",
-    id: 2,
-    capacity: 15,
-    devices: 2,
-    status: "booked",
-  },
-  {
-    name: "Hannibal",
-    id: 3,
-    capacity: 10,
-    devices: 1,
-    status: "occupied",
-  },
-  {
-    name: "Hannon",
-    id: 4,
-    capacity: 25,
-    devices: 4,
-    status: "available",
-  },
-];
+import Axios from "axios";
 
 export default function BasicTable() {
-  const [state, setState] = React.useState(false);
+  const [state, setState] = useState(false);
+  const [meetingRooms, setMeetingRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState({});
+
+  const getMeetingRooms = () => {
+    Axios.get(`http://localhost:8080/api/rooms/all`).then((response) => {
+      // const parsedObject = JSON.parse(response.data);
+      const roomsArray = Object.values(response.data);
+      setMeetingRooms(roomsArray);
+    });
+  };
 
   const hideDrawerFromChild = (value) => {
     setState(value);
   };
 
-  const toggleDrawer = (open) => (event) => {
+  const toggleDrawer = (event) => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -65,9 +45,18 @@ export default function BasicTable() {
       return;
     }
 
-    setState(open);
+    setState(!state);
   };
 
+  const handleRoomInformation = (row) => {
+    setSelectedRoom(row);
+    toggleDrawer(false);
+  };
+
+  useEffect(() => {
+    getMeetingRooms();
+    console.log(meetingRooms);
+  });
   return (
     <>
       <TableContainer
@@ -95,14 +84,16 @@ export default function BasicTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {meetingRooms.map((row, index) => (
               <TableRow
                 hover
-                key={row.title}
+                key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell
-                  onClick={toggleDrawer(true)}
+                  onClick={() => {
+                    handleRoomInformation(row);
+                  }}
                   component="th"
                   scope="row"
                   sx={{
@@ -112,11 +103,11 @@ export default function BasicTable() {
                     },
                   }}
                 >
-                  {row.name}
+                  {row.roomName}
                 </TableCell>
                 <TableCell align="right">{row.id}</TableCell>
                 <TableCell align="right">{row.capacity}</TableCell>
-                <TableCell align="right">{row.devices}</TableCell>
+                <TableCell align="right">{row.roomDevices.length}</TableCell>
                 <TableCell align="right">{row.status}</TableCell>
               </TableRow>
             ))}
@@ -131,9 +122,14 @@ export default function BasicTable() {
         }}
         anchor="right"
         open={state}
-        onClose={toggleDrawer(false)}
+        onClose={() => {
+          toggleDrawer(false);
+        }}
       >
-        <RoomInformation hideDrawer={hideDrawerFromChild}></RoomInformation>
+        <RoomInformation
+          selectedRoom={selectedRoom}
+          hideDrawer={hideDrawerFromChild}
+        ></RoomInformation>
       </Drawer>
     </>
   );

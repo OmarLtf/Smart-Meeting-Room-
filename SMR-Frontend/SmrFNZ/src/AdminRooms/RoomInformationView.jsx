@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
@@ -14,7 +15,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function MiddleDividers({ hideDrawer }) {
+export default function MiddleDividers({ selectedRoom, hideDrawer }) {
+  const [meetingRoom, setMeetingRoom] = useState(selectedRoom);
   const rows = [
     {
       deviceName: "device1",
@@ -31,6 +33,7 @@ export default function MiddleDividers({ hideDrawer }) {
   const hide = () => {
     hideDrawer(false);
   };
+
   return (
     <Box sx={{ width: 450, maxWidth: 500, bgcolor: "white", padding: 3 }}>
       <Box sx={{ my: 3, mx: 2 }}>
@@ -42,7 +45,7 @@ export default function MiddleDividers({ hideDrawer }) {
               component="div"
               sx={{ marginTop: "15px" }}
             >
-              Carthage
+              {meetingRoom.roomName}
             </Typography>
           </Grid>
           <Grid>
@@ -62,7 +65,7 @@ export default function MiddleDividers({ hideDrawer }) {
               variant="contained"
             >
               <span>
-                <b>Available</b>
+                <b>{meetingRoom.status}</b>
               </span>
             </LoadingButton>
           </Grid>
@@ -108,13 +111,42 @@ export default function MiddleDividers({ hideDrawer }) {
         <Typography gutterBottom variant="h6">
           Materials
         </Typography>
-        <Stack sx={{ maxWidth: 100 }} direction="row" spacing={2}>
-          <Chip color="primary" label="Laptops" />
-          <Chip color="primary" label="Data Show" />
-          <Chip label="Camera" />
-          <Chip color="primary" label="Noise Filter" />
-          <Chip label="TV Screen" />
-        </Stack>
+        {/* <Stack sx={{ maxWidth: 100 }} direction="row" spacing={2}>
+          {meetingRoom.equipments.map((material, index) => (
+            <Chip
+              key={index}
+              label={material}
+              color={index % 2 === 0 ? "primary" : undefined}
+            />
+          ))}
+        </Stack> */}
+        {meetingRoom.equipments.length > 0 && (
+          <>
+            {Array.from(
+              { length: Math.ceil(meetingRoom.equipments.length / 4) },
+              (_, index) => {
+                const start = index * 4;
+                const end = start + 4;
+                const slicedMaterials = meetingRoom.equipments.slice(
+                  start,
+                  end
+                );
+
+                return (
+                  <Stack m={1} key={index} direction="row" spacing={2}>
+                    {slicedMaterials.map((material, chipIndex) => (
+                      <Chip
+                        key={start + chipIndex}
+                        label={material}
+                        color={chipIndex % 2 === 0 ? "primary" : undefined}
+                      />
+                    ))}
+                  </Stack>
+                );
+              }
+            )}
+          </>
+        )}
       </Box>
       <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
         <Button onClick={hide}>Back</Button>

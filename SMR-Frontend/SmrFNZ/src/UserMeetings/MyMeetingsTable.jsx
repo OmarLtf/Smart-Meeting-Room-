@@ -35,13 +35,12 @@ function PaperComponent(props) {
 export default function BasicTable() {
   const [userMeetings, setUserMeetings] = useState([]);
   const [state, setState] = useState(false);
-
+  const [meetingToUpdate, setMeetingToUpdate] = useState({});
   const [open, setOpen] = useState(false);
   const [roomId, setRoomID] = useState();
   const handleDelete = (meetingId) => {
     Axios.delete(`http://localhost:8080/api/booking/delete/${meetingId}`)
       .then((response) => {
-        console.log("Meeting deleted successfully");
         console.log(response);
       })
       .catch((error) => {
@@ -57,7 +56,6 @@ export default function BasicTable() {
 
   const handleConfirm = () => {
     handleDelete(roomId);
-    console.log(roomId);
     setRoomID(null);
     setOpen(false);
   };
@@ -70,14 +68,14 @@ export default function BasicTable() {
     setState(value);
   };
 
-  const toggleDrawer = (open) => (event) => {
+  const toggleDrawer = (event) => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
     }
-    setState(open);
+    setState(!state);
   };
 
   const getUserMeetings = (userId) => {
@@ -86,7 +84,6 @@ export default function BasicTable() {
         // const parsedObject = JSON.parse(response.data);
         const meetingsArray = Object.values(response.data);
         setUserMeetings(meetingsArray);
-        console.log(userMeetings);
       }
     );
   };
@@ -103,6 +100,12 @@ export default function BasicTable() {
   const getTime = (value) => {
     const dateObj = new Date(value);
     return dateObj.toLocaleTimeString();
+  };
+
+  const handlePostpone = (row) => {
+    toggleDrawer(true);
+    console.log(row);
+    setMeetingToUpdate(row);
   };
 
   return (
@@ -202,7 +205,9 @@ export default function BasicTable() {
                     size="small"
                     variant="contained"
                     endIcon={<EventRepeatIcon />}
-                    onClick={toggleDrawer(true)}
+                    onClick={() => {
+                      handlePostpone(row);
+                    }}
                   >
                     postpone
                   </Button>
@@ -220,9 +225,15 @@ export default function BasicTable() {
         }}
         anchor="right"
         open={state}
-        onClose={toggleDrawer(false)}
+        onClose={() => {
+          toggleDrawer(false);
+        }}
       >
-        <EditMeetingForm hideDrawer={hideDrawerFromChild}></EditMeetingForm>
+        <EditMeetingForm
+          // updateMeeting={updateInfoFromChild}
+          meetingToUpdate={meetingToUpdate}
+          hideDrawer={hideDrawerFromChild}
+        ></EditMeetingForm>
       </Drawer>
       <div>
         <Dialog

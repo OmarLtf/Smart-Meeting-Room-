@@ -11,7 +11,7 @@ Connect Device
 - DeviceConnectionString
 
 */
-import * as React from "react";
+import { useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -20,13 +20,17 @@ import { Box } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-
+import Axios from "axios";
 export default function FormPropsTextFields() {
-  const [roomLocation, setRoomLocation] = React.useState("");
-  const [materials, setMaterials] = React.useState([]);
-  const [numDevices, setNumDevices] = React.useState(1);
-  const [devices, setDevices] = React.useState(
-    Array.from({ length: numDevices }, () => "")
+  const [roomID, setRoomID] = useState(0);
+  const [roomName, setRoomName] = useState("");
+  const [capacity, setCapacity] = useState(0);
+  const [roomLocation, setRoomLocation] = useState("");
+  const [materials, setMaterials] = useState([]);
+  const [numDevices, setNumDevices] = useState(1);
+
+  const [devices, setDevices] = useState(
+    Array.from({ length: numDevices }, () => 0)
   );
 
   const handleDeviceChange = (event, index) => {
@@ -36,7 +40,7 @@ export default function FormPropsTextFields() {
   };
 
   // Handle Change for Meeting Room Select Input
-  const handleChange = (event) => {
+  const handleLocationChange = (event) => {
     setRoomLocation(event.target.value);
   };
 
@@ -50,14 +54,27 @@ export default function FormPropsTextFields() {
   };
 
   // Handle Click for Save Button
-  const [loading, setLoading] = React.useState(false);
-  function handleClick() {
-    setLoading(true);
+  const [loading, setLoading] = useState(false);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }
+  const handleSave = () => {
+    setLoading(true);
+    Axios.post("http://localhost:8080/api/rooms/insert", {
+      id: roomID,
+      roomName: roomName,
+      roomLocation: roomLocation,
+      status: "AVAILABLE",
+      capacity: capacity,
+      equipments: materials,
+      roomDevices: devices,
+      roomBooking: [],
+    }).then(() => {
+      console.log("sucessful insert");
+      setRoomID(roomID + 1);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    });
+  };
 
   return (
     <Box
@@ -84,22 +101,10 @@ export default function FormPropsTextFields() {
           }}
           required
           id="outlined-required"
-          label="Room ID"
-          defaultValue=""
-        />
-        <TextField
-          sx={{
-            backgroundColor: "white",
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
-            },
-            boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
-            borderRadius: "5px",
-          }}
-          required
-          id="outlined-required"
           label="Room Name"
-          defaultValue=""
+          onChange={(e) => {
+            setRoomName(e.target.value);
+          }}
         />
         <TextField
           sx={{
@@ -114,7 +119,9 @@ export default function FormPropsTextFields() {
           type="number"
           id="outlined-required"
           label="Capacity"
-          defaultValue=""
+          onChange={(e) => {
+            setCapacity(e.target.value);
+          }}
         />
         <div>
           <FormControl sx={{ m: 1, minWidth: "40ch" }}>
@@ -135,7 +142,7 @@ export default function FormPropsTextFields() {
               id="demo-simple-select-helper"
               value={roomLocation}
               label="Room Location"
-              onChange={handleChange}
+              onChange={handleLocationChange}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -183,8 +190,8 @@ export default function FormPropsTextFields() {
               required
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
-              value={roomLocation}
-              label="Room Location"
+              value={materials.join(", ")}
+              label="Room Materials"
               onChange={handleMaterials}
             >
               <MenuItem value="Clear">
@@ -240,9 +247,9 @@ export default function FormPropsTextFields() {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={"device1"}>device1</MenuItem>
-              <MenuItem value={"device2"}>device2</MenuItem>
-              <MenuItem value={"device3"}>device3</MenuItem>
+              <MenuItem value={1}>device1</MenuItem>
+              <MenuItem value={2}>device2</MenuItem>
+              <MenuItem value={3}>device3</MenuItem>
             </Select>
           </FormControl>
         ))}
@@ -257,7 +264,7 @@ export default function FormPropsTextFields() {
       >
         <LoadingButton
           color="secondary"
-          onClick={handleClick}
+          onClick={handleSave}
           loading={loading}
           loadingPosition="start"
           startIcon={<SaveIcon />}
