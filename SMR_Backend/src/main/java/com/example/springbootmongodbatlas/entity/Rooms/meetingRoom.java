@@ -8,20 +8,24 @@ import java.util.List;
 public class meetingRoom {
     @Id
     private Integer id;
+    private String roomName;
     private String name;
 
     private RoomStatus status;
     private int capacity;
     private List<String> equipments;
+    private String roomLocation;
 
-    private String roomDevices;
+    private List<Integer> roomDevices;
     private List<Booking> roomBooking;
     // constructors, getters and setters
-    public meetingRoom(int id, RoomStatus status, int capacity, List<String> equipments, String roomDevices, List<Booking> roomBooking) {
+    public meetingRoom(int id, String roomName, RoomStatus status, int capacity, List<String> equipments, String roomLocation, List<Integer> roomDevices, List<Booking> roomBooking) {
         this.id = id;
+        this.roomName = roomName;
         this.status = status;
         this.capacity = capacity;
         this.equipments = equipments;
+        this.roomLocation = roomLocation;
         this.roomDevices = roomDevices;
         this.roomBooking = roomBooking;
     }
@@ -63,11 +67,11 @@ public class meetingRoom {
     }
 
 
-    public String getRoomDevices() {
+    public List<Integer> getRoomDevices() {
         return roomDevices;
     }
 
-    public void setRoomDevices(String roomDevices) {
+    public void setRoomDevices(List<Integer> roomDevices) {
         this.roomDevices = roomDevices;
     }
 
@@ -77,6 +81,22 @@ public class meetingRoom {
 
     public void setRoomBooking(List<Booking> roomBooking) {
         this.roomBooking = roomBooking;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public String getRoomLocation() {
+        return roomLocation;
+    }
+
+    public void setRoomLocation(String roomLocation) {
+        this.roomLocation = roomLocation;
     }
 }
 
