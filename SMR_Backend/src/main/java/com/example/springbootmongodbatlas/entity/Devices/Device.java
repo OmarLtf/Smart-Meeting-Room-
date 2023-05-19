@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Device {
     @Id
     private Integer id;
+    private String deviceName;
     private String connectionString;
     private DeviceStatus deviceStatus;
 
@@ -34,11 +35,19 @@ public class Device {
         this.deviceStatus = deviceStatus;
     }
 
-    public Device(Integer id, String connectionString, DeviceStatus deviceStatus) {
+    public Device(Integer id, String deviceName, String connectionString, DeviceStatus deviceStatus) {
         this.id = id;
+        this.deviceName = deviceName;
         this.connectionString = connectionString;
         this.deviceStatus = deviceStatus;
     }
 
 
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
 }

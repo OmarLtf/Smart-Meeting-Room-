@@ -18,8 +18,9 @@ public class meetingRoom {
 
     private List<Integer> roomDevices;
     private List<Booking> roomBooking;
+    private String color;
     // constructors, getters and setters
-    public meetingRoom(int id, String roomName, RoomStatus status, int capacity, List<String> equipments, String roomLocation, List<Integer> roomDevices, List<Booking> roomBooking) {
+    public meetingRoom(int id, String roomName, RoomStatus status, int capacity, List<String> equipments, String roomLocation, List<Integer> roomDevices, List<Booking> roomBooking, String color) {
         this.id = id;
         this.roomName = roomName;
         this.status = status;
@@ -28,6 +29,7 @@ public class meetingRoom {
         this.roomLocation = roomLocation;
         this.roomDevices = roomDevices;
         this.roomBooking = roomBooking;
+        this.color = color;
     }
 
     public meetingRoom() {
@@ -97,6 +99,14 @@ public class meetingRoom {
 
     public void setRoomLocation(String roomLocation) {
         this.roomLocation = roomLocation;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
 

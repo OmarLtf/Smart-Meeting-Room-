@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +18,8 @@ import static org.apache.tomcat.jni.SSL.getTime;
 
 @Service
 public class BookingServiceImpl implements BookingService {
+    Date today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date startOfNextDay = Date.from(LocalDate.now().plus(1, ChronoUnit.DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant());
     @Autowired
     private BookingRepository bookingRepository;
     @Override
@@ -48,6 +53,11 @@ public class BookingServiceImpl implements BookingService {
       bookingRepository.save(updatedBooking);
       return updatedBooking;
 
+    }
+
+    @Override
+    public List<Booking> getTodaysBookings(){
+        return bookingRepository.findTodaysMeetings(today, startOfNextDay);
     }
 
 

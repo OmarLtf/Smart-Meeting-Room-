@@ -16,5 +16,6 @@ public interface BookingService {
 
     public Booking updateBooking(int id , Booking booking);
     public List<Booking> getMeetingsStartingIn15min();
+    public List<Booking> getTodaysBookings();
 
 }

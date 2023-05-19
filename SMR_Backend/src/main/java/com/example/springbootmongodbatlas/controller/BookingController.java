@@ -22,6 +22,12 @@ public class BookingController {
     }
 
     @CrossOrigin(origins ="http://localhost:5173")
+    @GetMapping("/today/all")
+    public List<Booking> getTodaysBookings() {
+        return bookingService.getTodaysBookings();
+    }
+
+    @CrossOrigin(origins ="http://localhost:5173")
     @GetMapping("/userBooking/{id}")
     public List<Booking> getUserBookings(@PathVariable int id){
         return bookingService.getUserBookings(id);
