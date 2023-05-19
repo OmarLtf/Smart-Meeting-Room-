@@ -101,9 +101,20 @@ export default function BasicTable() {
                     "&:hover": {
                       textDecoration: "underline",
                     },
+                    display: "flex", // Add display: flex to create a row layout
+                    alignItems: "center", // Align items vertically in the center
                   }}
                 >
-                  {row.roomName}
+                  <div
+                    style={{
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: row.color,
+                      borderRadius: "50%",
+                      marginRight: "10px",
+                    }}
+                  ></div>
+                  <div>{row.roomName}</div>
                 </TableCell>
                 <TableCell align="right">{row.id}</TableCell>
                 <TableCell align="right">{row.capacity}</TableCell>

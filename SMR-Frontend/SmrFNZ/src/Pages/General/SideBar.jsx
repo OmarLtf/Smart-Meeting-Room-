@@ -219,8 +219,8 @@ export default function PersistentDrawerLeft() {
           {[
             "Dashboard",
             "My Meetings",
-            "Admin Dashboard",
             "Rooms Management",
+            "Admin Dashboard",
           ].map((text) => (
             <Link
               style={{ textDecoration: "none", color: "#2B2B2B" }}

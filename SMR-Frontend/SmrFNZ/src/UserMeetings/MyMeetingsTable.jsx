@@ -32,15 +32,19 @@ function PaperComponent(props) {
   );
 }
 
-export default function BasicTable() {
+export default function BasicTable({ meetingAdded }) {
   const [userMeetings, setUserMeetings] = useState([]);
   const [state, setState] = useState(false);
   const [meetingToUpdate, setMeetingToUpdate] = useState({});
   const [open, setOpen] = useState(false);
   const [roomId, setRoomID] = useState();
+  const [roomsArray, setRoomsArray] = useState([]);
+  const [elementDeleted, setElementDeleted] = useState(true);
+
   const handleDelete = (meetingId) => {
     Axios.delete(`http://localhost:8080/api/booking/delete/${meetingId}`)
       .then((response) => {
+        setElementDeleted(!elementDeleted);
         console.log(response);
       })
       .catch((error) => {
@@ -79,18 +83,54 @@ export default function BasicTable() {
   };
 
   const getUserMeetings = (userId) => {
-    Axios.get(`http://localhost:8080/api/booking/userBooking/${userId}`).then(
-      (response) => {
-        // const parsedObject = JSON.parse(response.data);
+    Axios.get(`http://localhost:8080/api/booking/userBooking/${userId}`)
+      .then((response) => {
         const meetingsArray = Object.values(response.data);
         setUserMeetings(meetingsArray);
-      }
+      })
+      .catch((error) => {
+        console.error("Error fetching meetings:", error);
+        // Handle any errors that occur during the request
+      });
+  };
+
+  const getRooms = (meetingsArray) => {
+    const tempRooms = [];
+    const roomRequests = meetingsArray.map((row) =>
+      Axios.get(`http://localhost:8080/api/rooms/${row.roomId}`)
     );
+
+    Promise.all(roomRequests)
+      .then((roomResponses) => {
+        roomResponses.forEach((response) => tempRooms.push(response.data));
+        setRoomsArray(tempRooms);
+      })
+      .catch((error) => {
+        console.error("Error fetching rooms:", error);
+        // Handle any errors that occur during the requests
+      });
   };
 
   useEffect(() => {
     getUserMeetings(5678);
-  });
+  }, [meetingAdded, elementDeleted]);
+
+  useEffect(() => {
+    // Define a separate function to update rooms when userMeetings change
+    const updateRooms = async () => {
+      if (userMeetings.length > 0) {
+        await getRooms(userMeetings);
+      }
+    };
+    // Call the updateRooms function whenever userMeetings change
+    updateRooms();
+  }, [userMeetings]);
+
+  useEffect(() => {
+    if (userMeetings.length > 0) {
+      getRooms(userMeetings);
+    }
+  }, [userMeetings]);
 
   const getDate = (value) => {
     const dateObj = new Date(value);
@@ -104,7 +144,6 @@ export default function BasicTable() {
 
   const handlePostpone = (row) => {
     toggleDrawer(true);
-    console.log(row);
     setMeetingToUpdate(row);
   };
 
@@ -144,23 +183,13 @@ export default function BasicTable() {
                 <TableCell align="right">
                   <LoadingButton
                     sx={{
-                      backgroundColor:
-                        row.roomId === 1
-                          ? "#f15bb5"
-                          : row.roomId === 2
-                          ? "#00bbf9"
-                          : row.roomId === 3
-                          ? "#02dbbe"
-                          : "#f5db36",
+                      backgroundColor: roomsArray[index]
+                        ? roomsArray[index].color
+                        : "",
                       "&:hover": {
-                        backgroundColor:
-                          row.roomId === 1
-                            ? "#f15bb5"
-                            : row.roomId === 2
-                            ? "#00bbf9"
-                            : row.roomId === 3
-                            ? "#02dbbe"
-                            : "#f5db36",
+                        backgroundColor: roomsArray[index]
+                          ? roomsArray[index].color
+                          : "",
                         boxShadow: "none",
                       },
 
@@ -172,15 +201,7 @@ export default function BasicTable() {
                   >
                     <span>
                       <b>
-                        {row.roomId === 1
-                          ? "Carthage"
-                          : row.roomId === 2
-                          ? "Hannon"
-                          : row.roomId === 3
-                          ? "Annibal"
-                          : row.roomId === 4
-                          ? "Cantine"
-                          : "room"}
+                        {roomsArray[index] ? roomsArray[index].roomName : ""}
                       </b>
                     </span>
                   </LoadingButton>

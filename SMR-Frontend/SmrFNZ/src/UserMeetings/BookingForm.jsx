@@ -27,22 +27,25 @@ import { TimePicker } from "@mui/x-date-pickers";
 
 import Axios from "axios";
 
-export default function FormPropsTextFields() {
+export default function FormPropsTextFields({
+  meetingAdded,
+  handleMeetingAdded,
+}) {
   const [meetingRoom, setMeetingRoom] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [date, setDate] = React.useState("");
   const [startTime, setStartTime] = React.useState(null);
   const [endTime, setEndTime] = React.useState(null);
-
-  const [id, setId] = React.useState(0);
+  const [availableRooms, setAvailableRooms] = React.useState([]);
 
   const handleStartTimeChange = (value) => {
     if (date) {
       const updatedStartTime = value.set("date", date.date());
-      const finalStartTime = updatedStartTime.add(1, "hour");
+      const selectedMonth = date.month();
+      const finalStartTime = updatedStartTime.month(selectedMonth);
       setStartTime(finalStartTime);
     } else {
-      const finalStartTime = value.add(1, "hour");
+      const finalStartTime = value;
       setStartTime(finalStartTime);
     }
   };
@@ -50,10 +53,11 @@ export default function FormPropsTextFields() {
   const handleEndTimeChange = (value) => {
     if (date) {
       const updatedEndTime = value.set("date", date.date());
-      const finalEndTime = updatedEndTime.add(1, "hour");
+      const selectedMonth = date.month();
+      const finalEndTime = updatedEndTime.month(selectedMonth);
       setEndTime(finalEndTime);
     } else {
-      const finalEndTime = value.add(1, "hour");
+      const finalEndTime = value;
       setEndTime(finalEndTime);
     }
   };
@@ -68,55 +72,57 @@ export default function FormPropsTextFields() {
   //     setLoading(false);
   //   }, 500);
   // }
-
   const saveMeeting = () => {
     setLoading(true);
-    Axios.post("http://localhost:8080/api/booking/insert", {
-      // title: title,
-      // userId: 111,
-      // room: meetingRoom,
-      // date: date,
-      // startTime: startTime,
-      // endTime: endTime,
 
-      id: id,
-      roomId:
-        meetingRoom == "Carthage"
-          ? 1
-          : meetingRoom == "Hannon"
-          ? 2
-          : meetingRoom == "Annibal"
-          ? 3
-          : meetingRoom == "Cantine"
-          ? 4
-          : 5,
-      title: title,
-      userId: 5678,
-      startTime: startTime,
-      endTime: endTime,
-      bookingStatus: "PENDING",
-      notifications: [
-        {
-          notificationType: "REMINDER",
-          notificationSent: false,
-        },
-        {
-          notificationType: "CONFIRMATION",
-          notificationSent: false,
-        },
-        {
-          notificationType: "CANCELLATION",
-          notificationSent: false,
-        },
-      ],
-    }).then(() => {
-      console.log("sucessful insert");
-      setId(id + 1);
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
+    // Fetch existing meeting IDs from the database
+    Axios.get("http://localhost:8080/api/booking/all").then((response) => {
+      const existingIDs = response.data.map((item) => item.id);
+      let newID = 0;
+
+      // Generate a new random ID until it doesn't exist in the database
+      do {
+        newID = Math.floor(Math.random() * 1000);
+      } while (existingIDs.includes(newID));
+
+      Axios.post("http://localhost:8080/api/booking/insert", {
+        id: newID,
+        roomId: meetingRoom,
+        title: title,
+        userId: 5678,
+        startTime: startTime,
+        endTime: endTime,
+        bookingStatus: "PENDING",
+        notifications: [
+          {
+            notificationType: "REMINDER",
+            notificationSent: false,
+          },
+          {
+            notificationType: "CONFIRMATION",
+            notificationSent: false,
+          },
+          {
+            notificationType: "CANCELLATION",
+            notificationSent: false,
+          },
+        ],
+      }).then(() => {
+        handleMeetingAdded(!meetingAdded);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      });
     });
   };
+  React.useEffect(() => {
+    Axios.get("http://localhost:8080/api/rooms/all").then((response) => {
+      setAvailableRooms(response.data);
+      console.log(response.data);
+    });
+
+    console.log(availableRooms);
+  }, []);
 
   return (
     <Box
@@ -175,17 +181,22 @@ export default function FormPropsTextFields() {
               value={meetingRoom}
               label="Meeting Room"
               onChange={(event) => {
-                console.log(event.target.value.roomId);
+                console.log(event.target.value);
                 setMeetingRoom(event.target.value);
               }}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={"Carthage"}>Carthage</MenuItem>
+              {/* <MenuItem value={"Carthage"}>Carthage</MenuItem>
               <MenuItem value={"Hannon"}>Hannon</MenuItem>
               <MenuItem value={"Annibal"}>Annibal</MenuItem>
-              <MenuItem value={"Cantine"}>Cantine</MenuItem>
+              <MenuItem value={"Cantine"}>Cantine</MenuItem> */}
+              {availableRooms.map((item, index) => (
+                <MenuItem key={index} value={item.id}>
+                  {item.roomName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </DemoContainer>

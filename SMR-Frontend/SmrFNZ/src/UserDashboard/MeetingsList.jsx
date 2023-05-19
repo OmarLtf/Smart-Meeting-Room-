@@ -6,11 +6,27 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import Axios from "axios";
 
 export default function AlignItemsList() {
+  const [todaysMeetings, setTodaysMeetings] = React.useState([]);
+
+  const getTodaysMeetings = () => {
+    Axios.get("http://localhost:8080/api/booking/today/all").then(
+      (response) => {
+        setTodaysMeetings(response.data);
+      }
+    );
+  };
+
+  React.useEffect(() => {
+    getTodaysMeetings();
+    console.log(todaysMeetings);
+  }, []);
   return (
     <List
       sx={{
+        borderRadius: "5px",
         margin: "20px",
         marginTop: "0px",
         width: "100%",
@@ -24,136 +40,38 @@ export default function AlignItemsList() {
         },
       }}
     >
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Remy Sharp"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Hanon
-              </Typography>
-              {" — 15:30 to 17:00"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Travis Howard"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Carthage
-              </Typography>
-              {" — 14:45 to 15:15"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Cindy Baker"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Hannibal
-              </Typography>
-              {" — 9:30 to 11:00 "}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Remy Sharp"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Hanon
-              </Typography>
-              {" — 15:30 to 17:00"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Travis Howard"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Carthage
-              </Typography>
-              {" — 14:45 to 15:15"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Cindy Baker"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Hannibal
-              </Typography>
-              {" — 9:30 to 11:00 "}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
+      {todaysMeetings.map((meeting, index) => (
+        <React.Fragment key={index}>
+          <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+              <Avatar alt={meeting.name} src={meeting.avatar} />
+            </ListItemAvatar>
+            <ListItemText
+              primary={meeting.name}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    sx={{ display: "inline" }}
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    {meeting.title}
+                  </Typography>
+                  {` — ${new Date(
+                    meeting.startTime
+                  ).toLocaleTimeString()} to ${new Date(
+                    meeting.endTime
+                  ).toLocaleTimeString()}`}
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+          {index !== todaysMeetings.length - 1 && (
+            <Divider variant="inset" component="li" />
+          )}
+        </React.Fragment>
+      ))}
     </List>
   );
 }

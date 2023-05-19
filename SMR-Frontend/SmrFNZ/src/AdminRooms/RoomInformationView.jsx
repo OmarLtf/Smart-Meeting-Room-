@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
@@ -14,21 +14,63 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Axios from "axios";
 
 export default function MiddleDividers({ selectedRoom, hideDrawer }) {
   const [meetingRoom, setMeetingRoom] = useState(selectedRoom);
-  const rows = [
-    {
-      deviceName: "device1",
-      id: "LT001",
-      status: "Connected",
-    },
-    {
-      deviceName: "device2",
-      id: "PR001",
-      status: "Battery-Low",
-    },
-  ];
+  const [devices, setDevices] = useState([]);
+  // const getDevices = () => {
+  //   meetingRoom.roomDevices.map((deviceID) => {
+  //     Axios.get(`http://localhost:8080/api/device/${deviceID}`).then(
+  //       (response) => {
+  //         setDevices((prevDevices) => [...prevDevices, response.data]);
+  //         console.log("one");
+  //       }
+  //     );
+  //   });
+  // };
+
+  const getDevices = () => {
+    const tempDevices = [];
+
+    // Create an array of Axios requests
+    const requests = meetingRoom.roomDevices.map((deviceID) =>
+      Axios.get(`http://localhost:8080/api/device/${deviceID}`)
+    );
+
+    // Execute all requests simultaneously
+    Promise.all(requests)
+      .then((responses) => {
+        // Process the responses and store devices in the temporary array
+        responses.forEach((response) => {
+          tempDevices.push(response.data);
+        });
+
+        // Update the devices state with the temporary array
+        setDevices(tempDevices);
+      })
+      .catch((error) => {
+        // Handle error if any of the requests fail
+        console.error("Error fetching devices:", error);
+      });
+  };
+
+  useEffect(() => {
+    getDevices();
+  }, []);
+
+  // const rows = [
+  //   {
+  //     deviceName: "device1",
+  //     id: "LT001",
+  //     status: "Connected",
+  //   },
+  //   {
+  //     deviceName: "device2",
+  //     id: "PR001",
+  //     status: "Battery-Low",
+  //   },
+  // ];
 
   const hide = () => {
     hideDrawer(false);
@@ -92,16 +134,16 @@ export default function MiddleDividers({ selectedRoom, hideDrawer }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {devices.map((row, index) => (
               <TableRow
-                key={row.deviceName}
+                key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
                   {row.deviceName}
                 </TableCell>
                 <TableCell align="right">{row.id}</TableCell>
-                <TableCell align="right">{row.status}</TableCell>
+                <TableCell align="right">{row.deviceStatus}</TableCell>
               </TableRow>
             ))}
           </TableBody>

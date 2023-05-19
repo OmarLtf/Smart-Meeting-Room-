@@ -11,7 +11,7 @@ Connect Device
 - DeviceConnectionString
 
 */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -28,10 +28,33 @@ export default function FormPropsTextFields() {
   const [roomLocation, setRoomLocation] = useState("");
   const [materials, setMaterials] = useState([]);
   const [numDevices, setNumDevices] = useState(1);
+  const [selectedColor, setSelectedColor] = useState("#000000");
 
   const [devices, setDevices] = useState(
-    Array.from({ length: numDevices }, () => 0)
+    Array.from({ length: numDevices }, () => "")
   );
+
+  const [availableDevices, setAvailableDevices] = useState([]);
+
+  const colors = [
+    "#f15bb5",
+    "#00bbf9",
+    "#02dbbe",
+    "#f5db36",
+    "#8a4eff",
+    "#ff8b00",
+    "#be5eff",
+    "#ff622c",
+    "#82e755",
+    "#848484",
+    "#a46400",
+    "#bc5789",
+    "#b8c5d6",
+    "#52796f",
+    "#dfbbb1",
+    "#71f5ee",
+    "#208aae",
+  ];
 
   const handleDeviceChange = (event, index) => {
     const newDevices = [...devices];
@@ -53,28 +76,53 @@ export default function FormPropsTextFields() {
     }
   };
 
-  // Handle Click for Save Button
   const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = (event) => {
+    event.preventDefault();
     setLoading(true);
-    Axios.post("http://localhost:8080/api/rooms/insert", {
-      id: roomID,
-      roomName: roomName,
-      roomLocation: roomLocation,
-      status: "AVAILABLE",
-      capacity: capacity,
-      equipments: materials,
-      roomDevices: devices,
-      roomBooking: [],
-    }).then(() => {
-      console.log("sucessful insert");
-      setRoomID(roomID + 1);
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
+
+    Axios.get("http://localhost:8080/api/rooms/all").then((response) => {
+      const existingIDs = response.data.map((item) => item.id);
+      let newID = 0;
+
+      // Generate a new random ID until it doesn't exist in the database
+      do {
+        newID = Math.floor(Math.random() * 1000);
+      } while (existingIDs.includes(newID));
+
+      Axios.post("http://localhost:8080/api/rooms/insert", {
+        id: newID,
+        roomName: roomName,
+        roomLocation: roomLocation,
+        status: "AVAILABLE",
+        capacity: capacity,
+        equipments: materials,
+        roomDevices: devices,
+        roomBooking: [],
+        color: selectedColor, // Include the selected color in the room object
+      }).then(() => {
+        console.log("successful insert");
+        setRoomID(roomID + 1);
+        setRoomName("");
+        setRoomLocation("");
+        setCapacity(0);
+        setMaterials([]);
+        setNumDevices(1);
+        setDevices(Array.from({ length: 1 }, () => ""));
+        setSelectedColor("#000000"); // Reset the selected color to default
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      });
     });
   };
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/api/device/all").then((response) => {
+      setAvailableDevices(response.data);
+    });
+  }, []);
 
   return (
     <Box
@@ -123,6 +171,7 @@ export default function FormPropsTextFields() {
             setCapacity(e.target.value);
           }}
         />
+
         <div>
           <FormControl sx={{ m: 1, minWidth: "40ch" }}>
             <InputLabel id="demo-simple-select-helper-label">
@@ -247,12 +296,50 @@ export default function FormPropsTextFields() {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={1}>device1</MenuItem>
-              <MenuItem value={2}>device2</MenuItem>
-              <MenuItem value={3}>device3</MenuItem>
+              {availableDevices.map((device, index) => (
+                <MenuItem key={index} value={device.id}>
+                  {device.deviceName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         ))}
+        <div>
+          {/* Rest of the code... */}
+          <FormControl sx={{ m: 1, minWidth: "40ch" }}>
+            <Select
+              sx={{
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "5px",
+                maxWidth: "100px",
+              }}
+              required
+              labelId="color-select-label"
+              id="color-select"
+              value={selectedColor}
+              onChange={(e) => setSelectedColor(e.target.value)}
+              label="Room Color"
+              defaultValue="#f15bb5"
+            >
+              {colors.map((color) => (
+                <MenuItem key={color} value={color}>
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: color,
+                      borderRadius: "50%",
+                    }}
+                  ></div>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
       </div>
       <Box
         sx={{
