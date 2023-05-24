@@ -53,11 +53,11 @@
 #endif // IOT_CONFIG_USE_X509_CERT
 
 // Azure IoT
-#define IOT_CONFIG_IOTHUB_FQDN "SMR-IoT-hub.azure-devices.net"
-#define IOT_CONFIG_DEVICE_ID "DRoom1"
+#define IOT_CONFIG_IOTHUB_FQDN "SMRIoThub.azure-devices.net"
+#define IOT_CONFIG_DEVICE_ID "deviceRoomCarthage"
 // Use device key if not using certificates
 #ifndef IOT_CONFIG_USE_X509_CERT
-#define IOT_CONFIG_DEVICE_KEY "ZQTj0D19xhyKJUhDCtX4TgE5ooDi82uRvV6xOMhUbac="
+#define IOT_CONFIG_DEVICE_KEY "Zvzuio8exyIVwb6wiscj0Bvp2SLxdbVNxMPI3RKwI7o="
 #endif // IOT_CONFIG_USE_X509_CERT
 
 // Publish 1 message every 2 seconds

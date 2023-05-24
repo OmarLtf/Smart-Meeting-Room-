@@ -24,8 +24,6 @@
  * file.
  */
 
-
-
 // C99 libraries
 #include <cstdlib>
 #include <string.h>
@@ -84,6 +82,17 @@ static char telemetry_topic[128];
 static uint8_t telemetry_payload[100];
 static uint32_t telemetry_send_count = 0;
 
+
+const int PIR_PIN = 18;                 // PIR sensor pin
+const int RCWL_PIN = 19;                // RCWL sensor pin
+const int LED_PIN = 27;                 // LED pin to indicate room availability
+const int MOTION_DELAY_RoomOcc = 1000;  // motion delay in milliseconds
+const int MOTION_DELAY_RoomAv = 3000;
+
+bool personInTheRoom = false;      // flag to indicate person in the room
+unsigned long lastMotionTime = 0;  // last time RCWL detected motion
+
+
 #define INCOMING_DATA_BUFFER_SIZE 128
 static char incoming_data[INCOMING_DATA_BUFFER_SIZE];
 
@@ -110,7 +119,6 @@ static void connectToWiFi() {
 
   Logger.Info("WiFi connected, IP address: " + WiFi.localIP().toString());
 }
-
 
 static void initializeTime() {
   Logger.Info("Setting time using SNTP");
@@ -192,6 +200,21 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event) {
 
   return ESP_OK;
 }
+
+// Function to detect motion with RCWL sensor for at least the specified motionDelay
+bool RCWLdetectMotion(int motionDelay) {
+  unsigned long motionStartTime = millis();
+  while (digitalRead(RCWL_PIN) == HIGH) {
+    if (millis() - motionStartTime >= motionDelay) {
+      return true;
+    }
+    delay(100);  // wait for 100 milliseconds before checking again
+  }
+  return false;
+}
+
+
+
 
 static void initializeIoTHubClient() {
   az_iot_hub_client_options options = az_iot_hub_client_options_default();
@@ -281,15 +304,24 @@ static uint32_t getEpochTimeInSecs() {
 
 static void establishConnection() {
   connectToWiFi();
-  // initializeTime();
+  initializeTime();
   initializeIoTHubClient();
   (void)initializeMqttClient();
 }
 
+static void getTelemetryPayload(az_span payload, az_span* out_payload) {
+  az_span original_payload = payload;
 
-static void sendTelemetry() {
+  payload = az_span_copy(payload, AZ_SPAN_FROM_STR("{ \"msgCount\": "));
+  (void)az_span_u32toa(payload, telemetry_send_count++, &payload);
+  payload = az_span_copy(payload, AZ_SPAN_FROM_STR(" }"));
+  payload = az_span_copy_u8(payload, '\0');
 
-  Logger.Info("Sending telemetry ...");
+  *out_payload = az_span_slice(
+    original_payload, 0, az_span_size(original_payload) - az_span_size(payload) - 1);
+}
+
+static void sendTelemetry(char* string) {
 
   // The topic could be obtained just once during setup,
   // however if properties are used the topic need to be generated again to reflect the
@@ -300,32 +332,38 @@ static void sendTelemetry() {
     return;
   }
 
-  const char* string = "{ \"temperature\": 26, \"Humidity\": 46, \"Room Status\": \"Occupied\" }";
-  if (esp_mqtt_client_publish(
+ if (esp_mqtt_client_publish(
         mqtt_client,
         telemetry_topic,
-        // (const char*)az_span_ptr(telemetry),
+            // (const char*)az_span_ptr(telemetry),
         (const char*)string,
         0,
         MQTT_QOS1,
         DO_NOT_RETAIN_MSG)
-      == 0) {
-    Logger.Error("Failed publishing");
-  } else {
-    Logger.Info("Message published successfully");
-  }
+            == 0) {
+          Logger.Error("Failed publishing");
+        } else {
+          Logger.Info("Message published successfully");
+        }
+      
+  
+
 }
 
 // Arduino setup and loop main functions.
 
 void setup() {
   establishConnection();
+  pinMode(PIR_PIN, INPUT);
+  pinMode(RCWL_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
   if (WiFi.status() != WL_CONNECTED) {
     connectToWiFi();
   }
+
 #ifndef IOT_CONFIG_USE_X509_CERT
   else if (sasToken.IsExpired()) {
     Logger.Info("SAS token expired; reconnecting with a new one.");
@@ -333,8 +371,47 @@ void loop() {
     initializeMqttClient();
   }
 #endif
-  else if (millis() > next_telemetry_send_time_ms) {
-    sendTelemetry();
+else {
+
+  // PIR sensor detects person
+  if (digitalRead(PIR_PIN) == HIGH) {
+    Serial.println("PIR detects motion : ");
+    delay(500);
+    // RCWL detects motion for more than 5 seconds
+    if (RCWLdetectMotion(MOTION_DELAY_RoomAv)) {
+      if(!personInTheRoom){      
+      Serial.println("Room Occupied");
+      personInTheRoom = true;
+
+  if (millis() > next_telemetry_send_time_ms) {
+    sendTelemetry("OCCUPIED");
     next_telemetry_send_time_ms = millis() + TELEMETRY_FREQUENCY_MILLISECS;
   }
+      }else{
+        Serial.println("Person still in the room | From PIR");
+      }
+    }
+  } 
+  // PIR sensor doesn't detect person
+  else {
+    // RCWL detects motion and person was previously detected
+    if (RCWLdetectMotion(MOTION_DELAY_RoomOcc) && personInTheRoom) {
+      Serial.println("Person still in the room | From RCWL");
+      lastMotionTime = millis();  // update last motion time
+    } 
+    // RCWL doesn't detect motion for more than 10 seconds
+    else if (!RCWLdetectMotion(MOTION_DELAY_RoomOcc) && personInTheRoom && (millis() - lastMotionTime > 20000) ) {
+      Serial.println("Room Available");
+      personInTheRoom = false;
+   if (millis() > next_telemetry_send_time_ms) {
+    sendTelemetry("AVAILABLE");
+    next_telemetry_send_time_ms = millis() + TELEMETRY_FREQUENCY_MILLISECS;
+  } 
+    }
+  }
+  }
+
+
+  
+
 }
