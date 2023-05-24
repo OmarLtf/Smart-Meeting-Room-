@@ -32,6 +32,8 @@ public class meetingRoom {
         this.color = color;
     }
 
+
+
     public meetingRoom() {
     }
 
@@ -107,6 +109,12 @@ public class meetingRoom {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Room Name " + roomName ;  // Customize this according to your MeetingRoom class
     }
 }
 

@@ -1,18 +1,18 @@
 package com.example.springbootmongodbatlas.service;
 
-import com.example.springbootmongodbatlas.entity.Bookings.Booking;
 import com.example.springbootmongodbatlas.entity.Devices.Device;
+import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
+import com.example.springbootmongodbatlas.entity.Statistics.RoomStatistics;
+import com.example.springbootmongodbatlas.entity.Users.Team;
 
+import java.util.HashMap;
 import java.util.List;
 
-public interface DeviceService {
+public interface StatisticsService {
 
-    public Device getDevice(int id);
-    public List<Device> getAllDevices();
+    public HashMap<String, RoomStatistics> getMeetingRoomsUsage();
 
-    public Device addDevice(Device device);
-    public Device deleteDevice(int id );
-
-    public Device updateDevice(int id , Device device);
+     public HashMap<meetingRoom, HashMap<Team, Integer>> getTeamsMeetingsByRoom();
+    public HashMap<String, HashMap<String, Integer> > getTeamsMeetingByMonth(); // January: {team1: 4, team2: 2}
 
 }
