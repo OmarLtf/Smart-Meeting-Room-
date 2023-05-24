@@ -28,9 +28,10 @@ public class EmailReminderController {
 
   @Scheduled(fixedRate = 60000L)
     public void remindUsers() {
+      System.out.println("main is processing ");
 
         List<Booking> bookings = bookingService.getMeetingsStartingIn15min();
-
+        System.out.print(bookings);
         for (Booking booking : bookings) {
             int userId = booking.getUserId();
             String userEmail = userService.getUser(userId).getUserEmail();
