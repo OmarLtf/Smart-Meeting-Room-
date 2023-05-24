@@ -4,6 +4,44 @@ import RoomCard from "../../UserDashboard/RoomCard.jsx";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
+const rooms = [
+  {
+    room: "Carthage",
+    status: "AVAILABLE",
+    nextMeetingTime: "14:30",
+  },
+  {
+    room: "Hannon",
+    status: "PANDING",
+    nextMeetingTime: "15:00",
+  },
+  {
+    room: "Spark",
+    status: "OCCUPIED",
+    nextMeetingTime: "16:00",
+  },
+  {
+    room: "Hannibal",
+    status: "AVAILABLE",
+    nextMeetingTime: "17:30",
+  },
+  {
+    room: "Oasis",
+    status: "OCCUPIED",
+    nextMeetingTime: "18:00",
+  },
+  {
+    room: "Room 6",
+    status: "AVAILABLE",
+    nextMeetingTime: "19:30",
+  },
+  {
+    room: "Room 7",
+    status: "AVAILABLE",
+    nextMeetingTime: "20:00",
+  },
+];
+
 const UserDashboard = () => {
   return (
     <>
@@ -25,12 +63,9 @@ const UserDashboard = () => {
           justifyContent="flex-start"
           alignItems="baseline"
         >
-          <RoomCard></RoomCard>
-          <RoomCard></RoomCard>
-          <RoomCard></RoomCard>
-          <RoomCard></RoomCard>
-          <RoomCard></RoomCard>
-          <RoomCard></RoomCard>
+          {rooms.map((value, index) => (
+            <RoomCard key={index} props={value}></RoomCard>
+          ))}
         </Grid>
 
         <Grid container direction="row">

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import NotFound404 from "./Pages/General/404NotFound.jsx";
 import Sidebar from "./Pages/General/SideBar.jsx";
 import SignIn from "./Pages/General/SignIn.jsx";
@@ -9,6 +9,16 @@ import MyMeetings from "./Pages/UserInterfaces/UserMeetings.jsx";
 import AdminRooms from "./Pages/UserInterfaces/AdminRooms.jsx";
 
 function App() {
+  const navigate = useNavigate();
+  const navigatetwo = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
+
+  const handleSignInClick = () => {
+    navigatetwo("/SignIn");
+  };
   return (
     <>
       <Routes>
@@ -20,11 +30,16 @@ function App() {
             element={<AdminDashboard></AdminDashboard>}
           />
           <Route path="/rooms" element={<AdminRooms></AdminRooms>} />
-          <Route path="/profile" element={<h1>Profile</h1>} />
           <Route path="/404" element={<NotFound404></NotFound404>} />
         </Route>
-        <Route path="/signin" element={<SignIn></SignIn>} />
-        <Route path="/signup" element={<SignUp></SignUp>} />
+        <Route
+          path="/signin"
+          element={<SignIn handleSignUpClick={handleSignUpClick}></SignIn>}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp handleSignInClick={handleSignInClick}></SignUp>}
+        />
       </Routes>
     </>
   );

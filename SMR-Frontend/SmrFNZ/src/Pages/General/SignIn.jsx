@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BackgroundImage from "../../Assets/Hero-WillisTower.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function Copyright(props) {
   return (
     <Typography
@@ -32,6 +32,12 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+  const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -129,8 +135,9 @@ export default function SignInSide() {
               </Link>
               <Grid container>
                 <Grid item container direction="row" justifyContent="right">
-                  <Link to="./signup">
-                    <p style={{ margin: 0 }}>
+                  <Link to="/signup">
+                    {" "}
+                    <p onClick={handleSignUpClick} style={{ margin: 0 }}>
                       {"D'ont have an account? Sign Up"}
                     </p>
                   </Link>

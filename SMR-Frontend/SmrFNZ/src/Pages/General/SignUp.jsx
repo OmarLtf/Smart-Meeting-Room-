@@ -2,7 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+import { Link, useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -36,6 +36,10 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+  const navigate = useNavigate();
+  const handleSignInClick = () => {
+    navigate("/SignIn");
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -178,9 +182,21 @@ export default function SignInSide() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="./SignIn" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
+                  <Box to="./signin">
+                    {" "}
+                    <p
+                      style={{
+                        margin: 0,
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        color: "#7620a1",
+                      }}
+                      onClick={handleSignInClick}
+                    >
+                      {" "}
+                      {"Already have an account? Sign in"}
+                    </p>
+                  </Box>
                 </Grid>
               </Grid>
             </Box>
