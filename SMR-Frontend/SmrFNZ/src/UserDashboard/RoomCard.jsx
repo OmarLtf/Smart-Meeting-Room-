@@ -15,14 +15,110 @@ fontColor : #f1ecf3
 
  */
 
+
+
 export default function BasicCard({ props }) {
   const linearGradient =
     props.status === "AVAILABLE"
       ? "linear-gradient(90deg, rgba(159,222,218,1) 0%, rgba(101,214,201,1) 24%, rgba(47,209,186,1) 45%, rgba(13,206,176,1) 77%);"
       : props.status === "OCCUPIED"
       ? "linear-gradient(90deg, rgba(255,189,150,1) 2%, rgba(254,153,141,1) 40%, rgba(254,127,134,1) 88%)"
-      : "linear-gradient(90deg, rgba(143,201,249,1) 0%, rgba(96,176,240,1) 25%, rgba(96,176,240,1) 40%, rgba(10,129,224,1) 85%)";
+      : props.status === "PANDING" 
+      ? "linear-gradient(90deg, rgba(143,201,249,1) 0%, rgba(96,176,240,1) 25%, rgba(96,176,240,1) 40%, rgba(10,129,224,1) 85%)"
+      : "linear-gradient(93deg, rgba(255,255,255,1) 0%, rgba(225,225,225,1) 100%)"
+      
 
+      if(props.status === "Loading"){
+        return (
+          <Card
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minWidth: 340,
+              maxWidth: 400,
+              maxHeight: 200,
+              background: linearGradient,
+              margin: "10px",
+              position: "relative", // Add relative positioning
+            }}
+          >
+            <CardContent>
+              <Typography sx={{ fontSize: 18, color: "#e7e7e7" }} gutterBottom>
+                Room
+              </Typography>
+              <Typography variant="h4" component="div" sx={{ color: "#e7e7e7" }}>
+                {props.roomName}
+              </Typography>
+              <Typography sx={{ mb: 1.5, color: "#e7e7e7" }} gutterBottom>
+                <br />
+                <b>{props.status}</b>
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#e7e7e7" }}>
+                Next Meeting: {props?.nextMeetingTime}
+              </Typography>
+            </CardContent>
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  width: 200,
+                  height: 200,
+                  background: "#ffffff",
+                  borderRadius: "50%",
+                  marginLeft: 25,
+                  marginTop: 25,
+                  position: "absolute",
+                  opacity: 0.3,
+                }}
+              ></Box>
+              <Box
+                sx={{
+                  width: 200,
+                  height: 200,
+                  background: "#ffffff",
+                  borderRadius: "50%",
+                  position: "absolute",
+                  opacity: 0.3,
+                  transform: "translate(40px, -40px)",
+                  marginLeft: 30,
+                }}
+              ></Box>
+            </Box>
+            <CardActions
+              sx={{
+                display: "flex",
+                justifyContent: "right",
+                position: "absolute",
+                top: 0,
+                right: 0,
+              }}
+            >
+              <Button
+                sx={{
+                  color: "#f1ecf3",
+                  "&:hover": {
+                    backgroundColor: "rgba(241,236,243, 0.1)",
+                  },
+                }}
+                size="small"
+              >
+                Book
+              </Button>
+            </CardActions>
+          </Card>
+        );
+      }
+      
   return (
     <Card
       sx={{
@@ -41,14 +137,14 @@ export default function BasicCard({ props }) {
           Room
         </Typography>
         <Typography variant="h4" component="div" sx={{ color: "#f1ecf3" }}>
-          {props.room}
+          {props.roomName}
         </Typography>
         <Typography sx={{ mb: 1.5, color: "#f1ecf3" }} gutterBottom>
           <br />
           <b>{props.status}</b>
         </Typography>
         <Typography variant="body2" sx={{ color: "#f1ecf3" }}>
-          Next Meeting: {props.nextMeetingTime}
+          Next Meeting: {props?.nextMeetingTime}
         </Typography>
       </CardContent>
       <Box

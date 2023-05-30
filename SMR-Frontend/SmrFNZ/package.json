@@ -21,13 +21,20 @@
     "@mui/lab": "^5.0.0-alpha.129",
     "@mui/material": "^5.12.3",
     "@mui/x-date-pickers": "^6.3.0",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",
     "dayjs": "^1.11.7",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-stomp": "^5.1.0",
+    "socket.io-client": "^4.6.1",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

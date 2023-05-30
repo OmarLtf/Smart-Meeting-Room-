@@ -3,46 +3,73 @@ import MeetingsList from "../../UserDashboard/MeetingsList.jsx";
 import RoomCard from "../../UserDashboard/RoomCard.jsx";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import {useEffect, useState} from "react";
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
 
-const rooms = [
+
+const loadingCard = [
   {
-    room: "Carthage",
-    status: "AVAILABLE",
-    nextMeetingTime: "14:30",
+    roomName: "Loading",
+    status: "Loading",
+    nextMeetingTime: "---------",
   },
   {
-    room: "Hannon",
-    status: "PANDING",
-    nextMeetingTime: "15:00",
+    roomName: "Loading",
+    status: "Loading",
+    nextMeetingTime: "---------",
   },
   {
-    room: "Spark",
-    status: "OCCUPIED",
-    nextMeetingTime: "16:00",
-  },
-  {
-    room: "Hannibal",
-    status: "AVAILABLE",
-    nextMeetingTime: "17:30",
-  },
-  {
-    room: "Oasis",
-    status: "OCCUPIED",
-    nextMeetingTime: "18:00",
-  },
-  {
-    room: "Room 6",
-    status: "AVAILABLE",
-    nextMeetingTime: "19:30",
-  },
-  {
-    room: "Room 7",
-    status: "AVAILABLE",
-    nextMeetingTime: "20:00",
+    roomName: "Loading",
+    status: "Loading",
+    nextMeetingTime: "---------",
   },
 ];
 
 const UserDashboard = () => {
+  const [message, setMessage] = useState([]);
+
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/stomp-endpoint');
+    const stompClient = Stomp.over(socket);
+
+
+
+    const connect = () => {
+      stompClient.connect({}, onConnected, onError);
+    };
+
+    const onConnected = () => {
+      stompClient.subscribe('/topic/updateService', onMessageReceived);
+    };
+
+    const onMessageReceived = (payload) => {
+      const receivedMessage = JSON.parse(payload.body);
+   
+      setMessage(receivedMessage);
+      console.log("this is a message from websocket ::::");
+      // console.log(receivedMessage);
+      console.log("-------------------");
+      console.log();
+      console.log("-------------------");
+    };
+
+    const onError = (err) => {
+      console.log(err);
+    };
+
+    connect();
+
+    // return () => {
+    //   stompClient.disconnect();
+    // };
+
+
+  }, []);
+
+
+
+
   return (
     <>
       <Grid container direction="column" justifyContent="center">
@@ -63,9 +90,17 @@ const UserDashboard = () => {
           justifyContent="flex-start"
           alignItems="baseline"
         >
-          {rooms.map((value, index) => (
-            <RoomCard key={index} props={value}></RoomCard>
-          ))}
+      {message.length === 0 ? (
+        // Show loading state when message array is empty
+        loadingCard.map((value, index) => (
+          <RoomCard key={index} props={value}></RoomCard>
+        ))
+      ) : (
+        // Render RoomCard components when message array has data
+        message.map((value, index) => (
+          <RoomCard key={index} props={value}></RoomCard>
+        ))
+      )}
         </Grid>
 
         <Grid container direction="row">
