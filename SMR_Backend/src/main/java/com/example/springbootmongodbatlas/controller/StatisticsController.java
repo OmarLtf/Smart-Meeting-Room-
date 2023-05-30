@@ -22,13 +22,11 @@ public class StatisticsController {
 
     @GetMapping("/pieChart")
     public HashMap<String, RoomStatistics> getMeetingRoomsCount(){
-        System.out.println(statisticsService.getMeetingRoomsUsage());
         return statisticsService.getMeetingRoomsUsage();
     }
 
 @Scheduled(fixedRate = 20000L)
     public HashMap<meetingRoom, HashMap<Team, Integer>> getTeamsMeetingsByRoom(){
-        System.out.println(statisticsService.getTeamsMeetingsByRoom());
         return statisticsService.getTeamsMeetingsByRoom();
     }
 }

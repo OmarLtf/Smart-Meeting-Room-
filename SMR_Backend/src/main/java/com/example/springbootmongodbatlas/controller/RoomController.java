@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -19,8 +20,7 @@ public class RoomController {
     }
     @CrossOrigin(origins ="http://localhost:5173")
     @GetMapping("/{id}")
-    public meetingRoom getRoom(@PathVariable int id ) {
-        System.out.println(roomService.getRoom(id));
+    public Optional<meetingRoom> getRoom(@PathVariable int id ) {
         return roomService.getRoom(id);
     }
     @CrossOrigin(origins ="http://localhost:5173")

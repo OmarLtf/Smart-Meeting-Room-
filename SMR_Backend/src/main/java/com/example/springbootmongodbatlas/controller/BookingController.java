@@ -36,7 +36,7 @@ public class BookingController {
     @CrossOrigin(origins ="http://localhost:5173")
     @GetMapping("/{id}")
     public Booking getBooking(@PathVariable int id ) {
-        System.out.println(bookingService.getBooking(id));
+
         return bookingService.getBooking(id);
     }
     @CrossOrigin(origins ="http://localhost:5173")
