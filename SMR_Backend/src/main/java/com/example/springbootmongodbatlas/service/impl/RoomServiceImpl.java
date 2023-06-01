@@ -43,7 +43,6 @@ public class RoomServiceImpl implements RoomService {
         updatedRoom.setRoomBooking(room.getRoomBooking());
       roomRepository.save(updatedRoom);
       return updatedRoom;
-
-
     }
+
 }

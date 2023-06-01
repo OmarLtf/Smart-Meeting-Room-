@@ -1,7 +1,10 @@
 package com.example.springbootmongodbatlas.service.impl;
 
 import com.example.springbootmongodbatlas.entity.Bookings.Booking;
+import com.example.springbootmongodbatlas.entity.Rooms.RoomStatus;
+import com.example.springbootmongodbatlas.entity.Rooms.meetingRoom;
 import com.example.springbootmongodbatlas.repo.BookingRepository;
+import com.example.springbootmongodbatlas.repo.RoomRepository;
 import com.example.springbootmongodbatlas.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +26,9 @@ public class BookingServiceImpl implements BookingService {
     Date startOfNextDay = Date.from(LocalDate.now().plus(1, ChronoUnit.DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant());
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
     @Override
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
@@ -75,7 +82,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<Booking> getMeetingsStartedBefore15min(){
+        Date DateTimeNow = new Date();
+        Date DateTimeBefore15min = new Date(DateTimeNow.getTime() - (15 * 60 * 1000)); // 15 minutes in milliseconds
+
+        List<Booking> bookingsBefore15min = bookingRepository.findAllBookingsForMeetingsStartedBefore15Min(DateTimeBefore15min);
+        List<Booking> panding15minBookings = new ArrayList<>();
+        for(Booking booking : bookingsBefore15min){
+           meetingRoom room =  roomRepository.findById(booking.getRoomId()).get();
+           if(room.getStatus().equals(RoomStatus.PANDING)){
+               panding15minBookings.add(booking);
+           }
+        }
+        return panding15minBookings;
+
+    }
+
+    @Override
     public List<Booking> getUserBookings(int id){
         return bookingRepository.findBookingByUserId( id);
+    }
+
+    @Override
+    public List<Booking> findMeetingsInProgress(Integer id, Date date){
+        return bookingRepository.findAllMeetingsInProgressByRoomId(id, date);
     }
 }

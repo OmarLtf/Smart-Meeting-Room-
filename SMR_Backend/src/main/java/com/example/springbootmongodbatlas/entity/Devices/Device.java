@@ -20,11 +20,11 @@ public class Device {
         this.id = id;
     }
 
-    public RoomStatus getConnectionString() {
+    public RoomStatus getRoomStatus() {
         return roomStatus;
     }
 
-    public void setConnectionString(String connectionString) {
+    public void setRoomStatus(RoomStatus roomStatus) {
         this.roomStatus = roomStatus;
     }
 

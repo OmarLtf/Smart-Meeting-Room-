@@ -26,6 +26,7 @@ public class EmailReminderService {
     }
 
 
+
     public Booking updateBookingStatus(int id, Booking booking) {
         Booking updatedBooking = bookingRepository.findById(id).get();
         updatedBooking.setBookingStatus(booking.getBookingStatus());

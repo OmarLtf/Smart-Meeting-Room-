@@ -4,6 +4,7 @@ import com.example.springbootmongodbatlas.entity.Bookings.Booking;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.awt.print.Book;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -22,6 +23,13 @@ public interface BookingRepository extends MongoRepository<Booking,Integer> {
 
     @Query("{ 'startTime' : { $gte: ?0, $lt: ?1 } }")
     List<Booking> findTodaysMeetings(Date today, Date startOfNextDay);
+
+
+    @Query("{ 'startTime' : { $lt: ?0 } }")
+    List<Booking> findAllBookingsForMeetingsStartedBefore15Min(Date in15minAgo);
+
+    @Query("{ 'roomId': ?0, 'startTime': { $lte: ?1 }, 'endTime': { $gt: ?1 } }")
+    List<Booking> findAllMeetingsInProgressByRoomId(Integer roomId, Date currentTime);
 
 
 
