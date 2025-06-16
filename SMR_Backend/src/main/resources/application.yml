@@ -1,5 +1,5 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://admin:adminpassword@smartmeetingroom.zc2fzdw.mongodb.net/?retryWrites=true&w=majority
-      database: FNZMeetingRooms
+      uri: *******
+      database: *******
